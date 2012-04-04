@@ -72,7 +72,6 @@
         parametersString = [parametersString substringToIndex:[parametersString length] - 1];
         parametersString = [parametersString stringByReplacingOccurrencesOfString:@"%3D" withString:@"="];   
     } 
-    parametersString = @""; 
     return parametersString; 
 }
 
