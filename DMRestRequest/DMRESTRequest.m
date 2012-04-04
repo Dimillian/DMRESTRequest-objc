@@ -14,7 +14,7 @@
 
 @implementation DMRESTRequest
 @synthesize delegate;
-@synthesize fromLogin = _fromLogin; 
+@synthesize HTTPHeaderFields = _HTTPHeaderFields; 
 
 -(id)initWithMethod:(NSString *)method  
           ressource:(NSString *)ressource 
@@ -27,6 +27,7 @@
         _ressource = ressource; 
         _parameters = array; 
         _shouldEscape = escape; 
+        _HTTPHeaderFields = nil; 
         
         
     }
@@ -52,6 +53,11 @@
         [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
         [request setHTTPBody:getData];
     }
+    
+    if (self.HTTPHeaderFields) {
+        [request setAllHTTPHeaderFields:self.HTTPHeaderFields]; 
+    }
+    
     return request; 
 }
 
@@ -67,7 +73,6 @@
             else {  
                 parametersString = [parametersString stringByAppendingFormat:@"%@&", parameter]; 
             }
-            
         }
         parametersString = [parametersString substringToIndex:[parametersString length] - 1];
         parametersString = [parametersString stringByReplacingOccurrencesOfString:@"%3D" withString:@"="];   
@@ -76,8 +81,7 @@
 }
 
 -(void)executeRequest
-{    
-    [self reset]; 
+{   
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES; 
     _connection = [[NSURLConnection alloc] initWithRequest:[self constructRequest] delegate:self];
     if (_connection) {
@@ -117,14 +121,9 @@
     [_connection cancel]; 
     _connection = nil; 
     _responseData = nil; 
-    _sucessResponse = NO; 
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
 }
 
--(void)reset
-{
-    _sucessResponse = NO;  
-}
 
 #pragma mark - NSURLConnection Delegate
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
