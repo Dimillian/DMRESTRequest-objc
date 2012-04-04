@@ -15,21 +15,21 @@
 @implementation DMRESTRequest
 @synthesize delegate;
 @synthesize HTTPHeaderFields = _HTTPHeaderFields; 
+@synthesize timeout; 
 
 -(id)initWithMethod:(NSString *)method  
           ressource:(NSString *)ressource 
-         parameters:(NSArray *)array 
+         parameters:(NSDictionary *)parameters 
     shouldEscapeParameters:(BOOL)escape
 {
     self = [super init]; 
     if (self) {
         _method = method; 
         _ressource = ressource; 
-        _parameters = array; 
+        _parameters = parameters; 
         _shouldEscape = escape; 
         _HTTPHeaderFields = nil; 
-        
-        
+        timeout = 60; 
     }
     return self; 
 }
@@ -37,9 +37,8 @@
 -(NSMutableURLRequest *)constructRequest
 {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setTimeoutInterval:60]; 
-    if ([_method isEqualToString:@"GET"]) {
-        [request setCachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData]; 
+    [request setTimeoutInterval:timeout]; 
+    if ([_method isEqualToString:@"GET"]) { 
         [request setURL:[NSURL URLWithString:
                          [NSString stringWithFormat:API_URL@"/%@.%@?%@", _ressource, FILE_EXT, [self constructParametersString]]]];
     }
@@ -49,6 +48,9 @@
         NSString *getLength = [NSString stringWithFormat:@"%d", [getData length]];
         [request setURL:[NSURL URLWithString:[NSString stringWithFormat:API_URL@"/%@.%@", _ressource, FILE_EXT]]];
         [request setHTTPMethod:_method];
+        if (self.HTTPHeaderFields) {
+            [request setAllHTTPHeaderFields:self.HTTPHeaderFields]; 
+        }
         [request setValue:getLength forHTTPHeaderField:@"Content-Length"];
         [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
         [request setHTTPBody:getData];
@@ -63,20 +65,31 @@
 
 -(NSString *)constructParametersString
 {
-    NSString *parametersString = [[NSString alloc]init];
+    NSString  *parametersString = [[NSString alloc]init];
     if (_parameters) {
-        for (NSString *parameter in _parameters) {
+        NSEnumerator *enumerator = [_parameters keyEnumerator];
+        //Sure you can prefer the block enumerator...
+        for(NSString *aKey in enumerator){
+            NSString *value = [_parameters valueForKey:aKey]; 
             if (_shouldEscape) {
-                NSString *escapedParameter = [parameter stringByEscapingForURLWithString:parameter]; 
-                parametersString = [parametersString stringByAppendingFormat:@"%@&", escapedParameter]; 
+                if ([value isKindOfClass:[NSString class]]) {
+                    NSString *escapedParameter = [value stringByEscapingForURLWithString:value]; 
+                    parametersString = [parametersString stringByAppendingFormat:@"%@=%@&", aKey, escapedParameter]; 
+                }
+                else {
+                    parametersString = [parametersString stringByAppendingFormat:@"%@=%@&", aKey, value]; 
+                }
             }
             else {  
-                parametersString = [parametersString stringByAppendingFormat:@"%@&", parameter]; 
+                parametersString = [parametersString stringByAppendingFormat:@"%@=%@&", aKey, value]; 
             }
         }
-        parametersString = [parametersString substringToIndex:[parametersString length] - 1];
-        parametersString = [parametersString stringByReplacingOccurrencesOfString:@"%3D" withString:@"="];   
+        parametersString = [parametersString stringByReplacingOccurrencesOfString:@"%3D" withString:@"="];
+        parametersString = [parametersString substringToIndex:[parametersString length] - 1]; 
     } 
+    else {
+        parametersString = @""; 
+    }
     return parametersString; 
 }
 
@@ -91,11 +104,13 @@
 
 }
 
--(void)executeBlockRequest:(void (^)(NSJSONSerialization *, DMJSonError *))handler
+-(void)executeBlockRequest:(void (^)(NSJSONSerialization *, DMError *))handler
 {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES; 
     [NSURLConnection sendAsynchronousRequest:[self constructRequest] queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *res, NSData *data, NSError *error){
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
         if (!data) {
-            DMJSonError *errorRest = [[DMJSonError alloc]init]; 
+            DMError *errorRest = [[DMError alloc]init]; 
             errorRest.code = error.code;
             errorRest.name = error.description; 
             handler(nil, errorRest); 
@@ -103,7 +118,7 @@
         else {
             NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];  
             if (error) {
-                DMJSonError *errorRest = [[DMJSonError alloc]init]; 
+                DMError *errorRest = [[DMError alloc]init]; 
                 errorRest.code = error.code;
                 errorRest.name = error.description; 
                 handler(json, errorRest); 
@@ -131,7 +146,9 @@
     
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     NSInteger responseStatusCode = [httpResponse statusCode];
-    [delegate requestDidRespondWithHTTPStatus:responseStatusCode]; 
+    if ([delegate respondsToSelector:@selector(requestDidRespondWithHTTPStatus:)]) {
+        [delegate requestDidRespondWithHTTPStatus:responseStatusCode]; 
+    }
 
 }
 
@@ -141,9 +158,11 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	if ([error code] == -1009) {
-        [delegate requestDidFailBecauseNoActiveConnection];
+        if ([delegate respondsToSelector:@selector(requestDidFailBecauseNoActiveConnection)]) {
+            [delegate requestDidFailBecauseNoActiveConnection];   
+        }
     }
-    DMJSonError *errorO = [[DMJSonError alloc]init]; 
+    DMError *errorO = [[DMError alloc]init]; 
     errorO.name = @"Connection Error"; 
     errorO.message = error.description;
     [delegate requestDidFailWithError:errorO]; 
@@ -152,9 +171,16 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	
+    if ([delegate respondsToSelector:@selector(requestDidFinishWithData:)]) {
+        [delegate requestDidFinishWithData:_responseData];   
+    }
+    
     NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:_responseData 
                                                                 options:NSJSONReadingAllowFragments 
                                                                   error:nil];
+    
+    [delegate requestDidFinishWithJSON:json];  
+    
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults]; 
     //Bonus: Show response on iOS in an alert if setting key is ON ! Cool for debugging a server directly in your 
     //app.
@@ -163,7 +189,6 @@
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"DEBUG" message:responseString delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil]; 
         [alertView show];    
     }
-    [delegate requestDidFinishWithJSON:json];    
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
     
 }

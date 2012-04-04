@@ -23,8 +23,9 @@
     //Block method, short method without using the delegate. 
     DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
                                                             ressource:@"users"
-                                                           parameters:[NSArray arrayWithObject:@"user_id=13"] shouldEscapeParameters:YES];
-    [blockrestRequest executeBlockRequest:^(NSJSONSerialization *json, DMJSonError *error){
+                                                           parameters:[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
+                                                    shouldEscapeParameters:YES];
+    [blockrestRequest executeBlockRequest:^(NSJSONSerialization *json, DMError *error){
         if (error) {
             //TODO show error message
         }
@@ -38,17 +39,21 @@
     [restRequest cancelRequest]; 
     
     restRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
-                                                            ressource:@"users"
-                                                           parameters:[NSArray arrayWithObject:@"user_id=13"] shouldEscapeParameters:YES];
+                                             ressource:@"users"
+                                            parameters:
+                                        [NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
+                                        shouldEscapeParameters:YES];
     [restRequest setDelegate:self]; 
     [restRequest executeRequest]; 
     
     
-    //Other examples with multiple parameters
+    //Other examples with multiple parameters and other properties
     DMRESTRequest *newRequest = [[DMRESTRequest alloc]initWithMethod:@"POST" 
                                                                  ressource:@"users"
-                                                                parameters:[NSArray arrayWithObjects:@"user_id=13", 
-                                                                            @"username=Dimillian", @"name=Thomas", nil] shouldEscapeParameters:YES];
+                                                                parameters:
+                        [NSDictionary dictionaryWithObjectsAndKeys:@"13", @"userId", @"Dimillian", @"username", nil]                    shouldEscapeParameters:YES];
+    newRequest.timeout = 50; 
+    [newRequest setHTTPHeaderFields:[NSDictionary dictionaryWithObject:@"From: user@example.com" forKey:@"From"]]; 
     [newRequest executeRequest]; 
     [newRequest cancelRequest]; 
     
@@ -79,7 +84,7 @@
     //This is where you can parse it into your model object and start doing some crazy shit
 }
 
--(void)requestDidFailWithError:(DMJSonError *)error
+-(void)requestDidFailWithError:(DMError *)error
 {
     //Request did fail with an error, check the error to know why and refresh your UI. 
 }

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface DMJSonError : NSObject
+@interface DMError : NSObject
 
 
 //If you use FRAPI on your server this constructor is intended to match

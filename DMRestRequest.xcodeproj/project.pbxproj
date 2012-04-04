@@ -15,7 +15,7 @@
 		9F59A2CB1529A093003D6047 /* DMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F59A2CA1529A093003D6047 /* DMAppDelegate.m */; };
 		9F59A2CE1529A093003D6047 /* DMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F59A2CD1529A093003D6047 /* DMViewController.m */; };
 		9F59A2D11529A093003D6047 /* DMViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9F59A2CF1529A093003D6047 /* DMViewController.xib */; };
-		9F59A2DD1529A112003D6047 /* DMJSonError.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F59A2DB1529A0F8003D6047 /* DMJSonError.m */; };
+		9F59A2DD1529A112003D6047 /* DMError.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F59A2DB1529A0F8003D6047 /* DMError.m */; };
 		9F59A2DF1529A14A003D6047 /* DMRESTRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F59A2D91529A0AC003D6047 /* DMRESTRequest.m */; };
 		9F59A2E31529A1A0003D6047 /* NSString+TotalEscaping.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F59A2E21529A198003D6047 /* NSString+TotalEscaping.m */; };
 		9F59A2E51529AC05003D6047 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 9F59A2E41529AC05003D6047 /* LICENSE */; };
@@ -37,8 +37,8 @@
 		9F59A2D01529A093003D6047 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DMViewController.xib; sourceTree = "<group>"; };
 		9F59A2D81529A0AC003D6047 /* DMRESTRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMRESTRequest.h; sourceTree = "<group>"; };
 		9F59A2D91529A0AC003D6047 /* DMRESTRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMRESTRequest.m; sourceTree = "<group>"; };
-		9F59A2DA1529A0F8003D6047 /* DMJSonError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMJSonError.h; sourceTree = "<group>"; };
-		9F59A2DB1529A0F8003D6047 /* DMJSonError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMJSonError.m; sourceTree = "<group>"; };
+		9F59A2DA1529A0F8003D6047 /* DMError.h */ = {isa = PBXFileReference; path = DMError.h; sourceTree = "<group>"; };
+		9F59A2DB1529A0F8003D6047 /* DMError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMError.m; sourceTree = "<group>"; };
 		9F59A2E11529A198003D6047 /* NSString+TotalEscaping.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+TotalEscaping.h"; sourceTree = "<group>"; };
 		9F59A2E21529A198003D6047 /* NSString+TotalEscaping.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+TotalEscaping.m"; sourceTree = "<group>"; };
 		9F59A2E41529AC05003D6047 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -117,8 +117,8 @@
 			children = (
 				9F59A2D81529A0AC003D6047 /* DMRESTRequest.h */,
 				9F59A2D91529A0AC003D6047 /* DMRESTRequest.m */,
-				9F59A2DA1529A0F8003D6047 /* DMJSonError.h */,
-				9F59A2DB1529A0F8003D6047 /* DMJSonError.m */,
+				9F59A2DA1529A0F8003D6047 /* DMError.h */,
+				9F59A2DB1529A0F8003D6047 /* DMError.m */,
 			);
 			name = DMRestRequest;
 			sourceTree = "<group>";
@@ -198,7 +198,7 @@
 			files = (
 				9F59A2E31529A1A0003D6047 /* NSString+TotalEscaping.m in Sources */,
 				9F59A2DF1529A14A003D6047 /* DMRESTRequest.m in Sources */,
-				9F59A2DD1529A112003D6047 /* DMJSonError.m in Sources */,
+				9F59A2DD1529A112003D6047 /* DMError.m in Sources */,
 				9F59A2C71529A093003D6047 /* main.m in Sources */,
 				9F59A2CB1529A093003D6047 /* DMAppDelegate.m in Sources */,
 				9F59A2CE1529A093003D6047 /* DMViewController.m in Sources */,
@@ -313,6 +313,7 @@
 				9F59A2D61529A093003D6047 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

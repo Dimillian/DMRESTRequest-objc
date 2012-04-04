@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DMJSonError.h"
+#import "DMError.h"
 
 @protocol DMRESTRequestDelegate;
 @interface DMRESTRequest : NSObject <NSURLConnectionDelegate>
@@ -16,21 +16,23 @@
     BOOL _shouldEscape; 
     NSString *_method; 
     NSString *_ressource; 
-    NSArray *_parameters;
+    NSDictionary *_parameters;
     NSMutableData *_responseData; 
     NSURLConnection *_connection; 
 }
 @property (nonatomic, strong) NSDictionary *HTTPHeaderFields; 
+//Default timeout is 60
+@property NSTimeInterval timeout; 
 @property (nonatomic, unsafe_unretained) id<DMRESTRequestDelegate> delegate; 
 -(id)initWithMethod:(NSString *)method 
           ressource:(NSString *)ressource 
-         parameters:(NSArray *)array 
+         parameters:(NSDictionary *)parameters 
         shouldEscapeParameters:(BOOL)escape;
 
 -(NSMutableURLRequest *)constructRequest; 
 -(NSString *)constructParametersString; 
 -(void)executeRequest;
--(void)executeBlockRequest:(void (^)(NSJSONSerialization *response, DMJSonError *error))handler;
+-(void)executeBlockRequest:(void (^)(NSJSONSerialization *response, DMError *error))handler;
 -(void)cancelRequest; 
                                                        
                                                 
@@ -40,8 +42,9 @@
 @required
 -(void)requestDidStart;
 -(void)requestDidFinishWithJSON:(NSJSONSerialization *)json; 
--(void)requestDidFailWithError:(DMJSonError *)error; 
+-(void)requestDidFailWithError:(DMError *)error; 
 @optional
 -(void)requestDidRespondWithHTTPStatus:(NSInteger)status; 
+-(void)requestDidFinishWithData:(NSMutableData *)data; 
 -(void)requestDidFailBecauseNoActiveConnection; 
 @end

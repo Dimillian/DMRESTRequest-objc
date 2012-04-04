@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "DMJSonError.h"
+#import "DMError.h"
 
-@implementation DMJSonError
+@implementation DMError
 @synthesize name = _name, message = _message, code = _code; 
 
 -(id)initWithDictionnary:(NSDictionary *)dic
