@@ -13,7 +13,6 @@
 @interface DMRESTRequest : NSObject <NSURLConnectionDelegate>
 {
     id<DMRESTRequestDelegate>__unsafe_unretained delegate; 
-    BOOL _sucessResponse; 
     BOOL _shouldEscape; 
     NSString *_method; 
     NSString *_ressource; 
@@ -21,8 +20,8 @@
     NSMutableData *_responseData; 
     NSURLConnection *_connection; 
 }
+@property (nonatomic, strong) NSDictionary *HTTPHeaderFields; 
 @property (nonatomic, unsafe_unretained) id<DMRESTRequestDelegate> delegate; 
-@property BOOL fromLogin; 
 -(id)initWithMethod:(NSString *)method 
           ressource:(NSString *)ressource 
          parameters:(NSArray *)array 
@@ -33,7 +32,6 @@
 -(void)executeRequest;
 -(void)executeBlockRequest:(void (^)(NSJSONSerialization *response, DMJSonError *error))handler;
 -(void)cancelRequest; 
--(void)reset; 
                                                        
                                                 
 @end
