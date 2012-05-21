@@ -14,6 +14,7 @@
 {
     id<DMRESTRequestDelegate>__unsafe_unretained delegate; 
     BOOL _shouldEscape; 
+    BOOL _sendJSON; 
     NSString *_method; 
     NSString *_ressource; 
     NSDictionary *_parameters;
@@ -22,7 +23,8 @@
 }
 @property (nonatomic, strong) NSDictionary *HTTPHeaderFields; 
 //Default timeout is 60
-@property NSTimeInterval timeout; 
+@property NSTimeInterval timeout;
+@property BOOL sendJSON; 
 @property (nonatomic, unsafe_unretained) id<DMRESTRequestDelegate> delegate; 
 -(id)initWithMethod:(NSString *)method 
           ressource:(NSString *)ressource 
@@ -31,6 +33,7 @@
 
 -(NSMutableURLRequest *)constructRequest; 
 -(NSString *)constructParametersString; 
+-(NSData *)parametersToJSON; 
 -(void)executeRequest;
 -(void)executeBlockRequest:(void (^)(NSJSONSerialization *response, DMError *error))handler;
 -(void)cancelRequest; 

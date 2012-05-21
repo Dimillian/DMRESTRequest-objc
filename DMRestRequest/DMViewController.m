@@ -53,6 +53,7 @@
                                                                 parameters:
                         [NSDictionary dictionaryWithObjectsAndKeys:@"13", @"userId", @"Dimillian", @"username", nil]                    shouldEscapeParameters:YES];
     newRequest.timeout = 50; 
+    newRequest.sendJSON = YES; 
     [newRequest setHTTPHeaderFields:[NSDictionary dictionaryWithObject:@"From: user@example.com" forKey:@"From"]]; 
     [newRequest executeRequest]; 
     [newRequest cancelRequest]; 

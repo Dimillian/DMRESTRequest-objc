@@ -15,6 +15,7 @@
 @implementation DMRESTRequest
 @synthesize delegate;
 @synthesize HTTPHeaderFields = _HTTPHeaderFields; 
+@synthesize sendJSON = _sendJSON; 
 @synthesize timeout; 
 
 -(id)initWithMethod:(NSString *)method  
@@ -29,6 +30,7 @@
         _parameters = parameters; 
         _shouldEscape = escape; 
         _HTTPHeaderFields = nil; 
+        _sendJSON = NO; 
         timeout = 60; 
     }
     return self; 
@@ -43,17 +45,24 @@
                          [NSString stringWithFormat:API_URL@"/%@.%@?%@", _ressource, FILE_EXT, [self constructParametersString]]]];
     }
     else {
-        NSData *getData = [[self constructParametersString]dataUsingEncoding:NSUTF8StringEncoding 
-                                                        allowLossyConversion:YES];
-        NSString *getLength = [NSString stringWithFormat:@"%d", [getData length]];
         [request setURL:[NSURL URLWithString:[NSString stringWithFormat:API_URL@"/%@.%@", _ressource, FILE_EXT]]];
         [request setHTTPMethod:_method];
-        if (self.HTTPHeaderFields) {
-            [request setAllHTTPHeaderFields:self.HTTPHeaderFields]; 
+        if (!_sendJSON) {
+            NSData *data = [[self constructParametersString]dataUsingEncoding:NSUTF8StringEncoding 
+                                                            allowLossyConversion:YES];
+            NSString *length = [NSString stringWithFormat:@"%d", [data length]];
+            [request setValue:length forHTTPHeaderField:@"Content-Length"];
+            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+            [request setHTTPBody:data];
         }
-        [request setValue:getLength forHTTPHeaderField:@"Content-Length"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        [request setHTTPBody:getData];
+        else {
+            NSString *length = [NSString stringWithFormat:@"%d", self.parametersToJSON.length]; 
+            [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            [request setValue:length forHTTPHeaderField:@"Content-Length"];
+            [request setHTTPBody:[self parametersToJSON]]; 
+        }
+        
     }
     
     if (self.HTTPHeaderFields) {
@@ -91,6 +100,15 @@
         parametersString = @""; 
     }
     return parametersString; 
+}
+
+-(NSData *)parametersToJSON
+{
+    NSError *error = nil; 
+    
+    return [NSJSONSerialization dataWithJSONObject:_parameters 
+                                          options:NSJSONWritingPrettyPrinted 
+                                            error:&error]; 
 }
 
 -(void)executeRequest
@@ -182,8 +200,7 @@
     [delegate requestDidFinishWithJSON:json];  
     
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults]; 
-    //Bonus: Show response on iOS in an alert if setting key is ON ! Cool for debugging a server directly in your 
-    //app.
+    //Bonus: Show response on iOS in an alert if setting key is ON ! Cool for debugging a server right from you app.
     if ([userDefault boolForKey:@"DEBUGMESSAGE"]) {
         NSString *responseString = [[NSString alloc]initWithData:_responseData encoding:NSUTF8StringEncoding]; 
         UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"DEBUG" message:responseString delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil]; 
