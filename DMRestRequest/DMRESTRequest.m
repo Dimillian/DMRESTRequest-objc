@@ -36,6 +36,20 @@
     return self; 
 }
 
+-(id)initWithMethod:(NSString *)method 
+          ressource:(NSString *)ressource 
+         parameters:(NSDictionary *)parameters
+               user:(NSString *)user password:(NSString *)password 
+    shouldEscapeParameters:(BOOL)escape
+{
+    self = [self initWithMethod:method ressource:ressource parameters:parameters shouldEscapeParameters:escape]; 
+    if (self) {
+        _user = user; 
+        _password = password; 
+    }
+    return self; 
+}
+
 -(NSMutableURLRequest *)constructRequest
 {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -208,6 +222,20 @@
     }
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
     
+}
+
+-(void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
+{
+    if (_user && _password) {
+        NSURLCredential *credential = [[NSURLCredential alloc]initWithUser:_user 
+                                                                  password:_password 
+                                                               persistence:NSURLCredentialPersistenceForSession];
+        
+        [[challenge sender]useCredential:credential forAuthenticationChallenge:challenge];  
+    }
+    else {
+        [[challenge sender]cancelAuthenticationChallenge:challenge]; 
+    }    
 }
 
 

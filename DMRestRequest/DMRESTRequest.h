@@ -20,6 +20,10 @@
     NSDictionary *_parameters;
     NSMutableData *_responseData; 
     NSURLConnection *_connection; 
+    
+    //Support HTTP AUth
+    NSString *_user; 
+    NSString *_password; 
 }
 @property (nonatomic, strong) NSDictionary *HTTPHeaderFields; 
 //Default timeout is 60
@@ -29,6 +33,14 @@
 -(id)initWithMethod:(NSString *)method 
           ressource:(NSString *)ressource 
          parameters:(NSDictionary *)parameters 
+        shouldEscapeParameters:(BOOL)escape;
+
+
+-(id)initWithMethod:(NSString *)method 
+          ressource:(NSString *)ressource 
+         parameters:(NSDictionary *)parameters 
+               user:(NSString *)user
+           password:(NSString *)password
         shouldEscapeParameters:(BOOL)escape;
 
 -(NSMutableURLRequest *)constructRequest; 
