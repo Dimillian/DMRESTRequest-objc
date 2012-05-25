@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DMError.h"
 
 @protocol DMRESTRequestDelegate;
 @interface DMRESTRequest : NSObject <NSURLConnectionDelegate>
@@ -24,6 +23,7 @@
     //Support HTTP AUth
     NSString *_user; 
     NSString *_password; 
+    NSString *_authEndPoint; 
 }
 @property (nonatomic, strong) NSDictionary *HTTPHeaderFields; 
 //Default timeout is 60
@@ -36,18 +36,16 @@
         shouldEscapeParameters:(BOOL)escape;
 
 
--(id)initWithMethod:(NSString *)method 
-          ressource:(NSString *)ressource 
-         parameters:(NSDictionary *)parameters 
-               user:(NSString *)user
-           password:(NSString *)password
-        shouldEscapeParameters:(BOOL)escape;
+-(id)initForhHTTPAuthWithUser:(NSString *)user
+                     password:(NSString *)password
+                 authEndPoint:(NSString *)endPoint; 
+-(void)executeHTTPAuthRequest:(void (^)(NSURLResponse *response, NSData *data, NSError *error))handler;      
 
 -(NSMutableURLRequest *)constructRequest; 
 -(NSString *)constructParametersString; 
 -(NSData *)parametersToJSON; 
 -(void)executeRequest;
--(void)executeBlockRequest:(void (^)(NSJSONSerialization *response, DMError *error))handler;
+-(void)executeBlockRequest:(void (^)(NSJSONSerialization *response, NSError *error))handler;
 -(void)cancelRequest; 
                                                        
                                                 
@@ -57,7 +55,7 @@
 @required
 -(void)requestDidStart;
 -(void)requestDidFinishWithJSON:(NSJSONSerialization *)json; 
--(void)requestDidFailWithError:(DMError *)error; 
+-(void)requestDidFailWithError:(NSError *)error; 
 @optional
 -(void)requestDidRespondWithHTTPStatus:(NSInteger)status; 
 -(void)requestDidFinishWithData:(NSMutableData *)data; 

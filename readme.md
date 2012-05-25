@@ -10,6 +10,8 @@ I wrote it as an highly re-usable class, you are invited to customize it to make
 This is not a framework or a complete solution like RESTKit is. 
 **DMRESTRequest** is a utility I wrote mostly because all other frameworks was too much complicated for my need. It is aim to do simple REST Request to a server without object mapping, network management, queuing etc...
 
+Also, DMRESTRequest is especially targeted for server that send back response as JSON, as the default block response type is of `NSJSONSerialization`. 
+
 ## Features
 1. Support 2 way of executing a request, using block or delegate. 
 2. Super simple to instantiate, you have to pass the **HTTP** method you want to use, the targeted **ressource** and the **parameters** as a dictionary `key=value`
@@ -18,6 +20,7 @@ This is not a framework or a complete solution like RESTKit is.
 5. Work with the status bar activity indicator. 
 6. I've wrote a little category to encode the parameters string in UTF-8 and escape it. It is included as **DMRESTRequest** use it. 
 7. Automatic parameters converstion to JSON format for HTTPBody if needed. 
+8. Basic HTTP auth support. 
 
 ## What you should know before using it
 
@@ -32,15 +35,17 @@ Default `Timeout` interval is 60 seconds, support custom HTTP header fields. Bot
 For automatic parameters conversion to JSON format for HTTPBody just set `request.sendJSON = YES` before executing the request.
 It will automagically convert your parameters to a JSON string and set thr HTTP stuff like `application/json`. (Useful for RAILS REST service for example)
 
-
 ###HTTP header fields
 The standard HTTP content-type is hardcoded to `application/x-www-form-urlencoded`, you're free to make it dynamic if you need a custom one. But for most/all of your requests it should works. 
+
+###Getting response
+If you start the request using the block method, the only parameter you'll get back is an `NSError` and `NSJSONSerialization`. If you want the pure `NSData` you should use the delegate method. 
 
 ###Custom HTTP header fields
 With the property `HTTPHeaderFields` you can overwrite the default HTTP header fields by yours. Once this property is modified DMRestRequest will not add any extra parameters itself. So you have to take care of everythings. 
 
 ## Getting started
-This is a really simple set of classes, ready to use, just import **DMRESTRequest**, **DMError** and **NSString+TotalEscaping** in your project, import **DMRESTRequest.h**  where you wan to make requests and you're done. 
+This is a really simple set of classes, ready to use, just import **DMRESTRequest**, and **NSString+TotalEscaping** in your project, import **DMRESTRequest.h**  where you wan to make requests and you're done. 
 
 ## Code example
 You will find more detailled examples in the project... 
@@ -53,7 +58,7 @@ You will find more detailled examples in the project...
 				[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
                                         shouldEscapeParameters:YES];
 
-    [restRequest executeBlockRequest:^(NSJSONSerialization *json, DMError *error){
+    [restRequest executeBlockRequest:^(NSJSONSerialization *json, NSError *error){
         if (error) {
  			//error
         }
@@ -89,7 +94,7 @@ You will find more detailled examples in the project...
 
 	}
 
-	-(void)requestDidFailWithError:(DMError *)error
+	-(void)requestDidFailWithError:(NSError *)error
 	{
 	}
 

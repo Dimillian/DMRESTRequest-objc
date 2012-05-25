@@ -25,7 +25,7 @@
                                                             ressource:@"users"
                                                            parameters:[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
                                                     shouldEscapeParameters:YES];
-    [blockrestRequest executeBlockRequest:^(NSJSONSerialization *json, DMError *error){
+    [blockrestRequest executeBlockRequest:^(NSJSONSerialization *json, NSError *error){
         if (error) {
             //TODO show error message
         }
@@ -85,7 +85,7 @@
     //This is where you can parse it into your model object and start doing some crazy shit
 }
 
--(void)requestDidFailWithError:(DMError *)error
+-(void)requestDidFailWithError:(NSError *)error
 {
     //Request did fail with an error, check the error to know why and refresh your UI. 
 }

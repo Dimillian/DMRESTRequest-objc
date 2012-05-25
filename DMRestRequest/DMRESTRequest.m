@@ -18,10 +18,11 @@
 @synthesize sendJSON = _sendJSON; 
 @synthesize timeout; 
 
+
 -(id)initWithMethod:(NSString *)method  
           ressource:(NSString *)ressource 
          parameters:(NSDictionary *)parameters 
-    shouldEscapeParameters:(BOOL)escape
+shouldEscapeParameters:(BOOL)escape
 {
     self = [super init]; 
     if (self) {
@@ -36,19 +37,6 @@
     return self; 
 }
 
--(id)initWithMethod:(NSString *)method 
-          ressource:(NSString *)ressource 
-         parameters:(NSDictionary *)parameters
-               user:(NSString *)user password:(NSString *)password 
-    shouldEscapeParameters:(BOOL)escape
-{
-    self = [self initWithMethod:method ressource:ressource parameters:parameters shouldEscapeParameters:escape]; 
-    if (self) {
-        _user = user; 
-        _password = password; 
-    }
-    return self; 
-}
 
 -(NSMutableURLRequest *)constructRequest
 {
@@ -136,24 +124,21 @@
 
 }
 
--(void)executeBlockRequest:(void (^)(NSJSONSerialization *, DMError *))handler
+-(void)executeBlockRequest:(void (^)(NSJSONSerialization *, NSError *))handler
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES; 
-    [NSURLConnection sendAsynchronousRequest:[self constructRequest] queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *res, NSData *data, NSError *error){
+    [NSURLConnection sendAsynchronousRequest:[self constructRequest] 
+                                       queue:[NSOperationQueue currentQueue] 
+                           completionHandler:^(NSURLResponse *res, NSData *data, NSError *error){
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
         if (!data) {
-            DMError *errorRest = [[DMError alloc]init]; 
-            errorRest.code = error.code;
-            errorRest.name = error.description; 
-            handler(nil, errorRest); 
+            handler(nil, error); 
         }
         else {
             NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];  
             if (error) {
-                DMError *errorRest = [[DMError alloc]init]; 
-                errorRest.code = error.code;
-                errorRest.name = error.description; 
-                handler(json, errorRest); 
+               
+                handler(json, error); 
             }
             else {
                 handler(json, nil); 
@@ -194,10 +179,7 @@
             [delegate requestDidFailBecauseNoActiveConnection];   
         }
     }
-    DMError *errorO = [[DMError alloc]init]; 
-    errorO.name = @"Connection Error"; 
-    errorO.message = error.description;
-    [delegate requestDidFailWithError:errorO]; 
+    [delegate requestDidFailWithError:error]; 
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
 }
 
@@ -224,6 +206,33 @@
     
 }
 
+
+#pragma mark - HTTP auth
+
+
+-(id)initForhHTTPAuthWithUser:(NSString *)user password:(NSString *)password authEndPoint:(NSString *)endPoint
+{
+    self = [super init]; 
+    if (self) {
+        _user = user; 
+        _password = password; 
+        _authEndPoint = endPoint; 
+    }
+    
+    return self; 
+}
+
+-(void)executeHTTPAuthRequest:(void (^)(NSURLResponse *, NSData *, NSError *))handler{
+    
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_authEndPoint]];
+    [NSURLConnection sendAsynchronousRequest:urlRequest 
+                                       queue:[NSOperationQueue currentQueue] 
+                           completionHandler:^(NSURLResponse *responde, NSData *data, NSError *error){
+                               handler(responde, data, error); 
+        
+    }]; 
+}
+
 -(void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
     if (_user && _password) {
@@ -237,6 +246,7 @@
         [[challenge sender]cancelAuthenticationChallenge:challenge]; 
     }    
 }
+
 
 
 @end
