@@ -51,14 +51,14 @@ shouldEscapeParameters:(BOOL)escape
         [request setHTTPMethod:_method];
         if (!_sendJSON) {
             NSData *data = [[self constructParametersString]dataUsingEncoding:NSUTF8StringEncoding 
-                                                            allowLossyConversion:YES];
+                                                         allowLossyConversion:YES];
             NSString *length = [NSString stringWithFormat:@"%d", [data length]];
             [request setValue:length forHTTPHeaderField:@"Content-Length"];
             [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
             [request setHTTPBody:data];
         }
         else {
-            NSString *length = [NSString stringWithFormat:@"%d", self.parametersToJSON.length]; 
+            NSString *length = [NSString stringWithFormat:@"%d", [self parametersToJSON].length]; 
             [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
             [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
             [request setValue:length forHTTPHeaderField:@"Content-Length"];
@@ -70,7 +70,6 @@ shouldEscapeParameters:(BOOL)escape
     if (self.HTTPHeaderFields) {
         [request setAllHTTPHeaderFields:self.HTTPHeaderFields]; 
     }
-    
     return request; 
 }
 
@@ -109,8 +108,8 @@ shouldEscapeParameters:(BOOL)escape
     NSError *error = nil; 
     
     return [NSJSONSerialization dataWithJSONObject:_parameters 
-                                          options:NSJSONWritingPrettyPrinted 
-                                            error:&error]; 
+                                           options:NSJSONWritingPrettyPrinted 
+                                             error:&error]; 
 }
 
 -(void)executeRequest
@@ -121,31 +120,18 @@ shouldEscapeParameters:(BOOL)escape
         _responseData = [[NSMutableData alloc] init];
         [delegate requestDidStart]; 
     }
-
+    
 }
 
--(void)executeBlockRequest:(void (^)(NSJSONSerialization *, NSError *))handler
+-(void)executeBlockRequest:(void (^)(NSURLResponse *, NSData *, NSError *))handler
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES; 
     [NSURLConnection sendAsynchronousRequest:[self constructRequest] 
                                        queue:[NSOperationQueue currentQueue] 
                            completionHandler:^(NSURLResponse *res, NSData *data, NSError *error){
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
-        if (!data) {
-            handler(nil, error); 
-        }
-        else {
-            NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];  
-            if (error) {
-               
-                handler(json, error); 
-            }
-            else {
-                handler(json, nil); 
-            }
-
-        }
-    }]; 
+                               [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
+                               handler(res, data, error); 
+                           }]; 
 }
 
 -(void)cancelRequest
@@ -166,7 +152,7 @@ shouldEscapeParameters:(BOOL)escape
     if ([delegate respondsToSelector:@selector(requestDidRespondWithHTTPStatus:)]) {
         [delegate requestDidRespondWithHTTPStatus:responseStatusCode]; 
     }
-
+    
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -222,29 +208,36 @@ shouldEscapeParameters:(BOOL)escape
     return self; 
 }
 
--(void)executeHTTPAuthRequest:(void (^)(NSURLResponse *, NSData *, NSError *))handler{
+-(void)executeHTTPAuthRequest{
     
+    _alreadyTried = NO; 
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_authEndPoint]];
-    [NSURLConnection sendAsynchronousRequest:urlRequest 
-                                       queue:[NSOperationQueue currentQueue] 
-                           completionHandler:^(NSURLResponse *responde, NSData *data, NSError *error){
-                               handler(responde, data, error); 
-        
-    }]; 
+    _connection = [[NSURLConnection alloc]initWithRequest:urlRequest delegate:self]; 
+    if (_connection) {
+        _responseData = [[NSMutableData alloc] init];
+        [delegate requestDidStart]; 
+    }
 }
 
 -(void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    if (_user && _password) {
+    if (_user && _password && !_alreadyTried) {
         NSURLCredential *credential = [[NSURLCredential alloc]initWithUser:_user 
                                                                   password:_password 
                                                                persistence:NSURLCredentialPersistenceForSession];
         
-        [[challenge sender]useCredential:credential forAuthenticationChallenge:challenge];  
+        [[challenge sender]useCredential:credential forAuthenticationChallenge:challenge]; 
+        _alreadyTried = YES; 
     }
     else {
         [[challenge sender]cancelAuthenticationChallenge:challenge]; 
+        [self.delegate requestCredentialIncorrectForHTTPAuth]; 
     }    
+}
+
+- (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection
+{
+    return YES; 
 }
 
 

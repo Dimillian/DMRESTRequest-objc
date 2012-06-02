@@ -25,12 +25,12 @@
                                                             ressource:@"users"
                                                            parameters:[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
                                                     shouldEscapeParameters:YES];
-    [blockrestRequest executeBlockRequest:^(NSJSONSerialization *json, NSError *error){
+    [blockrestRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error){
         if (error) {
             //TODO show error message
         }
         else{
-            //TODO do something with json
+            //TODO do something with response
         }
     }]; 
     
@@ -94,6 +94,11 @@
 {
     //No active connection detected
     //you should display en error message
+}
+
+-(void)requestCredentialIncorrectForHTTPAuth
+{
+    //Crendential provided incorect
 }
 
 - (void)viewDidUnload

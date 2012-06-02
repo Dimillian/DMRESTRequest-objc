@@ -10,7 +10,7 @@ I wrote it as an highly re-usable class, you are invited to customize it to make
 This is not a framework or a complete solution like RESTKit is. 
 **DMRESTRequest** is a utility I wrote mostly because all other frameworks was too much complicated for my need. It is aim to do simple REST Request to a server without object mapping, network management, queuing etc...
 
-Also, DMRESTRequest is especially targeted for server that send back response as JSON, as the default block response type is of `NSJSONSerialization`. 
+Also, DMRESTRequest is especially targeted for server that send back response as JSON but can be used of other response format too. 
 
 ## Features
 1. Support 2 way of executing a request, using block or delegate. 
@@ -58,49 +58,48 @@ You will find more detailled examples in the project...
 				[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
                                         shouldEscapeParameters:YES];
 
-    [restRequest executeBlockRequest:^(NSJSONSerialization *json, NSError *error){
+    [restRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error){
         if (error) {
  			//error
         }
         else {
-            //TODO do something with json
+            //Success
         }
     }];`
    
    
 ### using delegate 
-     restRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
-                                             ressource:@"users"
-                                            parameters:
-				[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
-                                        shouldEscapeParameters:YES];
-    [restRequest setDelegate:self]; 
-    [restRequest executeRequest]; 
-    
-    //delegate methodes available. 
-    
-    -(void)requestDidStart
-	{
-		
-	}
 
+	-(void)requestDidStart
+	{
+	   
+	}
+	
 	-(void)requestDidRespondWithHTTPStatus:(NSInteger)status
 	{
+	 
+	}
 	
-	}
-
-	-(void)requestDidFinishWithJSON:(NSJSONSerialization *)	json
+	-(void)requestDidFinishWithJSON:(NSJSONSerialization *)json
 	{
-
+	    
 	}
-
+	
 	-(void)requestDidFailWithError:(NSError *)error
 	{
+	   
 	}
-
+	
 	-(void)requestDidFailBecauseNoActiveConnection
 	{
+	    
 	}
+	
+	-(void)requestCredentialIncorrectForHTTPAuth
+	{
+	    
+	}
+
 	
 ## How to enhance it ? 
 Here is a few points you should take into considerations to make this class better.
