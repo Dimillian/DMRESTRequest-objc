@@ -38,8 +38,6 @@ It will automagically convert your parameters to a JSON string and set thr HTTP 
 ###HTTP header fields
 The standard HTTP content-type is hardcoded to `application/x-www-form-urlencoded`, you're free to make it dynamic if you need a custom one. But for most/all of your requests it should works. 
 
-###Getting response
-If you start the request using the block method, the only parameter you'll get back is an `NSError` and `NSJSONSerialization`. If you want the pure `NSData` you should use the delegate method. 
 
 ###Custom HTTP header fields
 With the property `HTTPHeaderFields` you can overwrite the default HTTP header fields by yours. Once this property is modified DMRestRequest will not add any extra parameters itself. So you have to take care of everythings. 
