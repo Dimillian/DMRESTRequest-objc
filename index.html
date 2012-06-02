@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="DMRESTRequest : Super simple Objective-C REST request wrapper. " />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>DMRESTRequest</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Dimillian/DMRESTRequest">View on GitHub</a>
+
+          <h1 id="project_title">DMRESTRequest</h1>
+          <h2 id="project_tagline">Super simple Objective-C REST request wrapper. </h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Dimillian/DMRESTRequest/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Dimillian/DMRESTRequest/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>DMRESTRequest</h1>
+
+<h2>Overview</h2>
+
+<p><strong>DMRESTRequest</strong> is a super simple wrapper around <strong>NSURLConnection</strong> and <strong>NSMutableRequest</strong>. 
+It's allow you to launch REST Requests to your server in 2 line, literally. </p>
+
+<p>It's built using <strong>ARC</strong> and targeted for iOS 5. </p>
+
+<p>I wrote it as an highly re-usable class, you are invited to customize it to make it fit in your client/server implementation.</p>
+
+<p>This is not a framework or a complete solution like RESTKit is. 
+<strong>DMRESTRequest</strong> is a utility I wrote mostly because all other frameworks was too much complicated for my need. It is aim to do simple REST Request to a server without object mapping, network management, queuing etc...</p>
+
+<p>Also, DMRESTRequest is especially targeted for server that send back response as JSON but can be used of other response format too. </p>
+
+<h2>Features</h2>
+
+<ol>
+<li>Support 2 way of executing a request, using block or delegate. </li>
+<li>Super simple to instantiate, you have to pass the <strong>HTTP</strong> method you want to use, the targeted <strong>ressource</strong> and the <strong>parameters</strong> as a dictionary <code>key=value</code>
+</li>
+<li>The class take care of building the appropriate request and the parameters data. </li>
+<li>Response trough a delegate (also works for blocks) method when no active internet connection is available. No Reachbility needed. </li>
+<li>Work with the status bar activity indicator. </li>
+<li>I've wrote a little category to encode the parameters string in UTF-8 and escape it. It is included as <strong>DMRESTRequest</strong> use it. </li>
+<li>Automatic parameters converstion to JSON format for HTTPBody if needed. </li>
+<li>Basic HTTP auth support. </li>
+</ol><h2>What you should know before using it</h2>
+
+<h3>Constants</h3>
+
+<p>You have to edit 2 constants, in <strong>DMRESTRequest</strong>, your <code>API_URL</code> and <code>FILE_EXT</code>. Those constants represent your server endpoint and the file extensions you use (ie .json).
+URL string is constructed like this <code>API_URL/ressource.FILE_EXT?parameters</code></p>
+
+<h3>Timeout</h3>
+
+<p>Default <code>Timeout</code> interval is 60 seconds, support custom HTTP header fields. Both are properties that you can set:  <code>request.timeout = 30</code>.</p>
+
+<h3>Sending parameters as JSON</h3>
+
+<p>For automatic parameters conversion to JSON format for HTTPBody just set <code>request.sendJSON = YES</code> before executing the request.
+It will automagically convert your parameters to a JSON string and set thr HTTP stuff like <code>application/json</code>. (Useful for RAILS REST service for example)</p>
+
+<h3>HTTP header fields</h3>
+
+<p>The standard HTTP content-type is hardcoded to <code>application/x-www-form-urlencoded</code>, you're free to make it dynamic if you need a custom one. But for most/all of your requests it should works. </p>
+
+<h3>Custom HTTP header fields</h3>
+
+<p>With the property <code>HTTPHeaderFields</code> you can overwrite the default HTTP header fields by yours. Once this property is modified DMRestRequest will not add any extra parameters itself. So you have to take care of everythings. </p>
+
+<h2>Getting started</h2>
+
+<p>This is a really simple set of classes, ready to use, just import <strong>DMRESTRequest</strong>, and <strong>NSString+TotalEscaping</strong> in your project, import <strong>DMRESTRequest.h</strong>  where you wan to make requests and you're done. </p>
+
+<h2>Code example</h2>
+
+<p>You will find more detailled examples in the project... </p>
+
+<h3>using block method</h3>
+
+<pre><code> restRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
+                                         ressource:@"users"
+                                        parameters:
+            [NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
+                                    shouldEscapeParameters:YES];
+
+[restRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error){
+    if (error) {
+        //error
+    }
+    else {
+        //Success
+    }
+}];`
+</code></pre>
+
+<h3>using delegate</h3>
+
+<pre><code>-(void)requestDidStart
+{
+
+}
+
+-(void)requestDidRespondWithHTTPStatus:(NSInteger)status
+{
+
+}
+
+-(void)requestDidFinishWithJSON:(NSJSONSerialization *)json
+{
+
+}
+
+-(void)requestDidFailWithError:(NSError *)error
+{
+
+}
+
+-(void)requestDidFailBecauseNoActiveConnection
+{
+
+}
+
+-(void)requestCredentialIncorrectForHTTPAuth
+{
+
+}
+</code></pre>
+
+<h2>How to enhance it ?</h2>
+
+<p>Here is a few points you should take into considerations to make this class better.</p>
+
+<ol>
+<li>You can enhance the custom model for error handling to make it match your server error response.</li>
+<li>Add some authentication support. </li>
+<li>Make it more HTTP compliant. Support custom content type. </li>
+<li>Create your own JSON parsers and create your own model to match your server implementation and make them works with this class. </li>
+</ol><h2>Licensing</h2>
+
+<p>Copyright (C) 2012 by Thomas Ricouard. </p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">DMRESTRequest maintained by <a href="https://github.com/Dimillian">Dimillian</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
