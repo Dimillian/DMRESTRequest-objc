@@ -237,7 +237,7 @@ shouldEscapeParameters:(BOOL)escape
 
 - (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection
 {
-    return YES; 
+    return NO; 
 }
 
 
