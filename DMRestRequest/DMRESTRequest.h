@@ -16,7 +16,7 @@
 @interface DMRESTRequest : NSObject <NSURLConnectionDelegate>
 {
 
-    id<DMRESTRequestDelegate>__unsafe_unretained delegate; 
+    id<DMRESTRequestDelegate>__weak delegate; 
     BOOL _shouldEscape; 
     BOOL _sendJSON; 
     NSString *_method; 
@@ -51,7 +51,7 @@
 /**
  The delegate, provide various feedback when you adopt the protocol and set the delegate
  */
-@property (nonatomic, unsafe_unretained) id<DMRESTRequestDelegate> delegate; 
+@property (nonatomic, weak) id<DMRESTRequestDelegate> delegate; 
 
 /**
  Init a new standard DMRESTRequest object
