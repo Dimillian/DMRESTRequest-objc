@@ -95,7 +95,9 @@ shouldEscapeParameters:(BOOL)escape
             }
         }
         parametersString = [parametersString stringByReplacingOccurrencesOfString:@"%3D" withString:@"="];
-        parametersString = [parametersString substringToIndex:[parametersString length] - 1]; 
+        if ([parametersString length] > 0) {
+            parametersString = [parametersString substringToIndex:[parametersString length] - 1];
+        }
     } 
     else {
         parametersString = @""; 
