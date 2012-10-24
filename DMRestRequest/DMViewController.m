@@ -25,8 +25,8 @@
                                                             ressource:@"users"
                                                            parameters:[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
                                                     shouldEscapeParameters:YES];
-    [blockrestRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error){
-        if (error) {
+    [blockrestRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success){
+        if (error || !success) {
             //TODO show error message
         }
         else{

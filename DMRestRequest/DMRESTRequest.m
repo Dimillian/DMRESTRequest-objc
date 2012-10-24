@@ -125,14 +125,19 @@ shouldEscapeParameters:(BOOL)escape
     
 }
 
--(void)executeBlockRequest:(void (^)(NSURLResponse *, NSData *, NSError *))handler
+-(void)executeBlockRequest:(void (^)(NSURLResponse *, NSData *, NSError *, BOOL))handler
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES; 
     [NSURLConnection sendAsynchronousRequest:[self constructRequest] 
                                        queue:[NSOperationQueue currentQueue] 
                            completionHandler:^(NSURLResponse *res, NSData *data, NSError *error){
-                               [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
-                               handler(res, data, error); 
+                               [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+                               if (error.code == -1009) {
+                                   handler(res, data, error, NO);
+                               }
+                               else{
+                                   handler(res, data, error, YES);
+                               }
                            }]; 
 }
 

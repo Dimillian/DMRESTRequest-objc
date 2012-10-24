@@ -96,7 +96,7 @@ shouldEscapeParameters:(BOOL)escape;
  Please note that you may have less information and precise progress status when using block, but far more convenient 
  than implementing a bunch of delegate method
  */
--(void)executeBlockRequest:(void (^)(NSURLResponse *response, NSData *data, NSError *error))handler;
+-(void)executeBlockRequest:(void (^)(NSURLResponse *response, NSData *data, NSError *error, BOOL success))handler;
 
 /**
  Cancel the current request

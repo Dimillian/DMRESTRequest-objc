@@ -3,12 +3,13 @@
 **DMRESTRequest** is a super simple wrapper around **NSURLConnection** and **NSMutableRequest**. 
 It's allow you to launch REST Requests to your server in 2 line, literally. 
 
-It's built using **ARC** and targeted for iOS 5. 
+It's built using **ARC** and targeted for iOS 5 and later, Mac OSX Snow Leopard and later. 
 
 I wrote it as an highly re-usable class, you are invited to customize it to make it fit in your client/server implementation.
 
-This is not a framework or a complete solution like RESTKit is. 
-**DMRESTRequest** is a utility I wrote mostly because all other frameworks was too much complicated for my need. It is aim to do simple REST Request to a server without object mapping, network management, queuing etc...
+This is not a framework nor complete solution like RESTKit is. 
+
+**DMRESTRequest** is a utility I wrote mostly because all other frameworks was doing too much  for my need. It is aim to do simple REST Request to a server without object mapping, network management, queuing etc...
 
 Also, DMRESTRequest is especially targeted for server that send back response as JSON but can be used of other response format too. 
 
@@ -29,7 +30,7 @@ You have to edit 2 constants, in **DMRESTRequest**, your `API_URL` and `FILE_EXT
 URL string is constructed like this `API_URL/ressource.FILE_EXT?parameters`
 
 ###Timeout
-Default `Timeout` interval is 60 seconds, support custom HTTP header fields. Both are properties that you can set:  `request.timeout = 30`.
+Default `Timeout` interval is 60 seconds You can you can set:  `request.timeout = 30`.
 
 ###Sending parameters as JSON
 For automatic parameters conversion to JSON format for HTTPBody just set `request.sendJSON = YES` before executing the request.
@@ -50,20 +51,18 @@ You will find more detailled examples in the project...
 
 ### using block method
 
-	 restRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
-                                             ressource:@"users"
-                                            parameters:
-				[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
-                                        shouldEscapeParameters:YES];
-
-    [restRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error){
-        if (error) {
- 			//error
+	 DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
+                                                            ressource:@"users"
+                                                           parameters:[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
+                                                    shouldEscapeParameters:YES];
+    [blockrestRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success){
+        if (error || !success) {
+            //TODO show error message
         }
-        else {
-            //Success
+        else{
+            //TODO do something with response
         }
-    }];`
+    }]; 
    
    
 ### using delegate 
@@ -102,9 +101,8 @@ You will find more detailled examples in the project...
 ## How to enhance it ? 
 Here is a few points you should take into considerations to make this class better.
 
-1. You can enhance the custom model for error handling to make it match your server error response.
-3. Add some authentication support. 
-4. Make it more HTTP compliant. Support custom content type. 
+1. Add a method to inject your **OAUTH** token within **DMRESTRequest**
+2. Make it more HTTP compliant. Support custom content type. 
 5. Create your own JSON parsers and create your own model to match your server implementation and make them works with this class. 
 
 ## Licensing 
