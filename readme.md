@@ -103,7 +103,7 @@ Here is a few points you should take into considerations to make this class bett
 
 1. Add a method to inject your **OAUTH** token within **DMRESTRequest**
 2. Make it more HTTP compliant. Support custom content type. 
-5. Create your own JSON parsers and create your own model to match your server implementation and make them works with this class. 
+3. Create your own JSON parsers and create your own model to match your server implementation and make them works with this class. 
 
 ## Licensing 
 Copyright (C) 2012 by Thomas Ricouard. 
