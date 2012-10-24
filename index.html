@@ -1,49 +1,50 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="DMRESTRequest : Super simple Objective-C REST request wrapper. " />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>DMRESTRequest</title>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>DMRESTRequest by Dimillian</title>
   </head>
 
   <body>
+    <div id="container">
+      <div class="inner">
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/Dimillian/DMRESTRequest">View on GitHub</a>
-
-          <h1 id="project_title">DMRESTRequest</h1>
-          <h2 id="project_tagline">Super simple Objective-C REST request wrapper. </h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/Dimillian/DMRESTRequest/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/Dimillian/DMRESTRequest/tarball/master">Download this project as a tar.gz file</a>
-            </section>
+        <header>
+          <h1>DMRESTRequest</h1>
+          <h2>Super simple Objective-C REST request wrapper. </h2>
         </header>
-    </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>DMRESTRequest</h1>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/Dimillian/DMRESTRequest/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/Dimillian/DMRESTRequest/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/Dimillian/DMRESTRequest" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>DMRESTRequest</h1>
 
 <h2>Overview</h2>
 
 <p><strong>DMRESTRequest</strong> is a super simple wrapper around <strong>NSURLConnection</strong> and <strong>NSMutableRequest</strong>. 
 It's allow you to launch REST Requests to your server in 2 line, literally. </p>
 
-<p>It's built using <strong>ARC</strong> and targeted for iOS 5. </p>
+<p>It's built using <strong>ARC</strong> and targeted for iOS 5 and later, Mac OSX Snow Leopard and later. </p>
 
 <p>I wrote it as an highly re-usable class, you are invited to customize it to make it fit in your client/server implementation.</p>
 
-<p>This is not a framework or a complete solution like RESTKit is. 
-<strong>DMRESTRequest</strong> is a utility I wrote mostly because all other frameworks was too much complicated for my need. It is aim to do simple REST Request to a server without object mapping, network management, queuing etc...</p>
+<p>This is not a framework nor complete solution like RESTKit is. </p>
+
+<p><strong>DMRESTRequest</strong> is a utility I wrote mostly because all other frameworks was doing too much  for my need. It is aim to do simple REST Request to a server without object mapping, network management, queuing etc...</p>
 
 <p>Also, DMRESTRequest is especially targeted for server that send back response as JSON but can be used of other response format too. </p>
 
@@ -68,7 +69,7 @@ URL string is constructed like this <code>API_URL/ressource.FILE_EXT?parameters<
 
 <h3>Timeout</h3>
 
-<p>Default <code>Timeout</code> interval is 60 seconds, support custom HTTP header fields. Both are properties that you can set:  <code>request.timeout = 30</code>.</p>
+<p>Default <code>Timeout</code> interval is 60 seconds You can you can set:  <code>request.timeout = 30</code>.</p>
 
 <h3>Sending parameters as JSON</h3>
 
@@ -93,20 +94,18 @@ It will automagically convert your parameters to a JSON string and set thr HTTP 
 
 <h3>using block method</h3>
 
-<pre><code> restRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
-                                         ressource:@"users"
-                                        parameters:
-            [NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
-                                    shouldEscapeParameters:YES];
-
-[restRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error){
-    if (error) {
-        //error
+<pre><code> DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
+                                                        ressource:@"users"
+                                                       parameters:[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
+                                                shouldEscapeParameters:YES];
+[blockrestRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success){
+    if (error || !success) {
+        //TODO show error message
     }
-    else {
-        //Success
+    else{
+        //TODO do something with response
     }
-}];`
+}]; 
 </code></pre>
 
 <h3>using delegate</h3>
@@ -147,8 +146,8 @@ It will automagically convert your parameters to a JSON string and set thr HTTP 
 <p>Here is a few points you should take into considerations to make this class better.</p>
 
 <ol>
-<li>You can enhance the custom model for error handling to make it match your server error response.</li>
-<li>Add some authentication support. </li>
+<li>Add a method to inject your <strong>OAUTH</strong> token within <strong>DMRESTRequest</strong>
+</li>
 <li>Make it more HTTP compliant. Support custom content type. </li>
 <li>Create your own JSON parsers and create your own model to match your server implementation and make them works with this class. </li>
 </ol><h2>Licensing</h2>
@@ -172,18 +171,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.</p>
-      </section>
+        </section>
+
+        <footer>
+          DMRESTRequest is maintained by <a href="https://github.com/Dimillian">Dimillian</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">DMRESTRequest maintained by <a href="https://github.com/Dimillian">Dimillian</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
   </body>
 </html>
