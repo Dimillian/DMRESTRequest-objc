@@ -38,15 +38,13 @@
 <p><strong>DMRESTRequest</strong> is a super simple wrapper around <strong>NSURLConnection</strong> and <strong>NSMutableRequest</strong>. 
 It's allow you to launch REST Requests to your server in 2 line, literally. </p>
 
-<p>It's built using <strong>ARC</strong> and targeted for iOS 5 and later, Mac OSX Snow Leopard and later. </p>
+<p><strong>DMRESTRequest</strong> built using <strong>ARC</strong> and targeted for iOS 5 and later, Mac OSX Snow Leopard and later. </p>
 
 <p>I wrote it as an highly re-usable class, you are invited to customize it to make it fit in your client/server implementation.</p>
 
-<p>This is not a framework nor complete solution like RESTKit is. </p>
+<p>This is not a framework nor a complete solution like RESTKit is. </p>
 
-<p><strong>DMRESTRequest</strong> is a utility I wrote mostly because all other frameworks was doing too much  for my need. It is aim to do simple REST Request to a server without object mapping, network management, queuing etc...</p>
-
-<p>Also, DMRESTRequest is especially targeted for server that send back response as JSON but can be used of other response format too. </p>
+<p><strong>DMRESTRequest</strong> is a utility I wrote mostly because all other frameworks was doing too much  for my need. It is aim to do simple REST Request to a server without object mapping and queuing.</p>
 
 <h2>Features</h2>
 
@@ -55,7 +53,7 @@ It's allow you to launch REST Requests to your server in 2 line, literally. </p>
 <li>Super simple to instantiate, you have to pass the <strong>HTTP</strong> method you want to use, the targeted <strong>ressource</strong> and the <strong>parameters</strong> as a dictionary <code>key=value</code>
 </li>
 <li>The class take care of building the appropriate request and the parameters data. </li>
-<li>Response trough a delegate (also works for blocks) method when no active internet connection is available. No Reachbility needed. </li>
+<li>Response trough block (also works with delegate) method when no active internet connection is available. No Reachbility needed. </li>
 <li>Work with the status bar activity indicator. </li>
 <li>I've wrote a little category to encode the parameters string in UTF-8 and escape it. It is included as <strong>DMRESTRequest</strong> use it. </li>
 <li>Automatic parameters converstion to JSON format for HTTPBody if needed. </li>
@@ -65,7 +63,7 @@ It's allow you to launch REST Requests to your server in 2 line, literally. </p>
 <h3>Constants</h3>
 
 <p>You have to edit 2 constants, in <strong>DMRESTRequest</strong>, your <code>API_URL</code> and <code>FILE_EXT</code>. Those constants represent your server endpoint and the file extensions you use (ie .json).
-URL string is constructed like this <code>API_URL/ressource.FILE_EXT?parameters</code></p>
+URL string is constructed like this <code>API_URL/ressource.FILE_EXT?parameters</code>for a GET request.</p>
 
 <h3>Timeout</h3>
 
@@ -74,11 +72,11 @@ URL string is constructed like this <code>API_URL/ressource.FILE_EXT?parameters<
 <h3>Sending parameters as JSON</h3>
 
 <p>For automatic parameters conversion to JSON format for HTTPBody just set <code>request.sendJSON = YES</code> before executing the request.
-It will automagically convert your parameters to a JSON string and set thr HTTP stuff like <code>application/json</code>. (Useful for RAILS REST service for example)</p>
+It will automagically convert your parameters to a JSON string and set thr HTTP stuff like <code>application/json</code>.</p>
 
 <h3>HTTP header fields</h3>
 
-<p>The standard HTTP content-type is hardcoded to <code>application/x-www-form-urlencoded</code>, you're free to make it dynamic if you need a custom one. But for most/all of your requests it should works. </p>
+<p>The standard HTTP content-type is hardcoded to <code>application/x-www-form-urlencoded</code>, you're free to make it dynamic if you need a custom one. But for most/all of your requests it should works. (It's set to <code>application/json</code> if you send params as JSON).</p>
 
 <h3>Custom HTTP header fields</h3>
 
@@ -94,7 +92,7 @@ It will automagically convert your parameters to a JSON string and set thr HTTP 
 
 <h3>using block method</h3>
 
-<pre><code> DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
+<pre><code>DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
                                                         ressource:@"users"
                                                        parameters:[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
                                                 shouldEscapeParameters:YES];
@@ -110,7 +108,10 @@ It will automagically convert your parameters to a JSON string and set thr HTTP 
 
 <h3>using delegate</h3>
 
-<pre><code>-(void)requestDidStart
+<pre><code>[restRequest setDelegate:self]; 
+[restRequest executeRequest]; 
+
+-(void)requestDidStart
 {
 
 }
@@ -139,6 +140,11 @@ It will automagically convert your parameters to a JSON string and set thr HTTP 
 {
 
 }
+</code></pre>
+
+<h3>Cancel a request</h3>
+
+<pre><code>[restRequest cancelRequest]; 
 </code></pre>
 
 <h2>How to enhance it ?</h2>
