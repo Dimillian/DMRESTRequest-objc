@@ -3,21 +3,19 @@
 **DMRESTRequest** is a super simple wrapper around **NSURLConnection** and **NSMutableRequest**. 
 It's allow you to launch REST Requests to your server in 2 line, literally. 
 
-It's built using **ARC** and targeted for iOS 5 and later, Mac OSX Snow Leopard and later. 
+**DMRESTRequest** built using **ARC** and targeted for iOS 5 and later, Mac OSX Snow Leopard and later. 
 
 I wrote it as an highly re-usable class, you are invited to customize it to make it fit in your client/server implementation.
 
-This is not a framework nor complete solution like RESTKit is. 
+This is not a framework nor a complete solution like RESTKit is. 
 
-**DMRESTRequest** is a utility I wrote mostly because all other frameworks was doing too much  for my need. It is aim to do simple REST Request to a server without object mapping, network management, queuing etc...
-
-Also, DMRESTRequest is especially targeted for server that send back response as JSON but can be used of other response format too. 
+**DMRESTRequest** is a utility I wrote mostly because all other frameworks was doing too much  for my need. It is aim to do simple REST Request to a server without object mapping and queuing.
 
 ## Features
 1. Support 2 way of executing a request, using block or delegate. 
 2. Super simple to instantiate, you have to pass the **HTTP** method you want to use, the targeted **ressource** and the **parameters** as a dictionary `key=value`
 3. The class take care of building the appropriate request and the parameters data. 
-4. Response trough a delegate (also works for blocks) method when no active internet connection is available. No Reachbility needed. 
+4. Response trough block (also works with delegate) method when no active internet connection is available. No Reachbility needed. 
 5. Work with the status bar activity indicator. 
 6. I've wrote a little category to encode the parameters string in UTF-8 and escape it. It is included as **DMRESTRequest** use it. 
 7. Automatic parameters converstion to JSON format for HTTPBody if needed. 
@@ -27,17 +25,17 @@ Also, DMRESTRequest is especially targeted for server that send back response as
 
 ###Constants
 You have to edit 2 constants, in **DMRESTRequest**, your `API_URL` and `FILE_EXT`. Those constants represent your server endpoint and the file extensions you use (ie .json).
-URL string is constructed like this `API_URL/ressource.FILE_EXT?parameters`
+URL string is constructed like this `API_URL/ressource.FILE_EXT?parameters`for a GET request.
 
 ###Timeout
 Default `Timeout` interval is 60 seconds You can you can set:  `request.timeout = 30`.
 
 ###Sending parameters as JSON
 For automatic parameters conversion to JSON format for HTTPBody just set `request.sendJSON = YES` before executing the request.
-It will automagically convert your parameters to a JSON string and set thr HTTP stuff like `application/json`. (Useful for RAILS REST service for example)
+It will automagically convert your parameters to a JSON string and set thr HTTP stuff like `application/json`.
 
 ###HTTP header fields
-The standard HTTP content-type is hardcoded to `application/x-www-form-urlencoded`, you're free to make it dynamic if you need a custom one. But for most/all of your requests it should works. 
+The standard HTTP content-type is hardcoded to `application/x-www-form-urlencoded`, you're free to make it dynamic if you need a custom one. But for most/all of your requests it should works. (It's set to `application/json` if you send params as JSON).
 
 
 ###Custom HTTP header fields
@@ -51,7 +49,7 @@ You will find more detailled examples in the project...
 
 ### using block method
 
-	 DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
+	DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
                                                             ressource:@"users"
                                                            parameters:[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
                                                     shouldEscapeParameters:YES];
@@ -66,6 +64,9 @@ You will find more detailled examples in the project...
    
    
 ### using delegate 
+
+	[restRequest setDelegate:self]; 
+    [restRequest executeRequest]; 
 
 	-(void)requestDidStart
 	{
@@ -96,6 +97,10 @@ You will find more detailled examples in the project...
 	{
 	    
 	}
+	
+###Cancel a request
+	[restRequest cancelRequest]; 
+	
 
 	
 ## How to enhance it ? 
