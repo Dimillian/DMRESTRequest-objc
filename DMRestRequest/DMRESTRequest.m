@@ -10,14 +10,28 @@
 #import "NSString+TotalEscaping.h"
 
 #define FILE_EXT @"json"
-#define API_URL @"http://exemple.com"
+#define API_URL @"https://api.virtual-info.info/"
+
+@interface DMRESTRequest ()
+{
+    BOOL _shouldEscape;
+    BOOL _sendJSON;
+    NSString *_method;
+    NSString *_ressource;
+    NSDictionary *_parameters;
+    NSMutableData *_responseData;
+    NSURLConnection *_connection;
+    
+    
+    NSString *_user;
+    NSString *_password;
+    NSString *_authEndPoint;
+    BOOL _alreadyTried;
+}
+@end
 
 @implementation DMRESTRequest
-@synthesize delegate;
-@synthesize HTTPHeaderFields = _HTTPHeaderFields; 
-@synthesize sendJSON = _sendJSON; 
-@synthesize timeout; 
-
+@synthesize delegate = _delegate;
 
 -(id)initWithMethod:(NSString *)method  
           ressource:(NSString *)ressource 
@@ -32,7 +46,7 @@ shouldEscapeParameters:(BOOL)escape
         _shouldEscape = escape; 
         _HTTPHeaderFields = nil; 
         _sendJSON = NO; 
-        timeout = 60; 
+        _timeout = 60;
     }
     return self; 
 }
@@ -41,7 +55,7 @@ shouldEscapeParameters:(BOOL)escape
 -(NSMutableURLRequest *)constructRequest
 {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setTimeoutInterval:timeout]; 
+    [request setTimeoutInterval:_timeout];
     if ([_method isEqualToString:@"GET"]) { 
         [request setURL:[NSURL URLWithString:
                          [NSString stringWithFormat:API_URL@"/%@.%@?%@", _ressource, FILE_EXT, [self constructParametersString]]]];
@@ -120,7 +134,7 @@ shouldEscapeParameters:(BOOL)escape
     _connection = [[NSURLConnection alloc] initWithRequest:[self constructRequest] delegate:self];
     if (_connection) {
         _responseData = [[NSMutableData alloc] init];
-        [delegate requestDidStart]; 
+        [self.delegate requestDidStart];
     }
     
 }
@@ -156,8 +170,8 @@ shouldEscapeParameters:(BOOL)escape
     
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     NSInteger responseStatusCode = [httpResponse statusCode];
-    if ([delegate respondsToSelector:@selector(requestDidRespondWithHTTPStatus:)]) {
-        [delegate requestDidRespondWithHTTPStatus:responseStatusCode]; 
+    if ([self.delegate respondsToSelector:@selector(requestDidRespondWithHTTPStatus:)]) {
+        [self.delegate requestDidRespondWithHTTPStatus:responseStatusCode];
     }
     
 }
@@ -168,25 +182,25 @@ shouldEscapeParameters:(BOOL)escape
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	if ([error code] == -1009) {
-        if ([delegate respondsToSelector:@selector(requestDidFailBecauseNoActiveConnection)]) {
-            [delegate requestDidFailBecauseNoActiveConnection];   
+        if ([self.delegate respondsToSelector:@selector(requestDidFailBecauseNoActiveConnection)]) {
+            [self.delegate requestDidFailBecauseNoActiveConnection];
         }
     }
-    [delegate requestDidFailWithError:error]; 
+    [self.delegate requestDidFailWithError:error];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	
-    if ([delegate respondsToSelector:@selector(requestDidFinishWithData:)]) {
-        [delegate requestDidFinishWithData:_responseData];   
+    if ([self.delegate respondsToSelector:@selector(requestDidFinishWithData:)]) {
+        [self.delegate requestDidFinishWithData:_responseData];
     }
     
     NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:_responseData 
                                                                 options:NSJSONReadingAllowFragments 
                                                                   error:nil];
     
-    [delegate requestDidFinishWithJSON:json];  
+    [self.delegate requestDidFinishWithJSON:json];
     
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults]; 
     //Bonus: Show response on iOS in an alert if setting key is ON ! Cool for debugging a server right from you app.
@@ -222,7 +236,7 @@ shouldEscapeParameters:(BOOL)escape
     _connection = [[NSURLConnection alloc]initWithRequest:urlRequest delegate:self]; 
     if (_connection) {
         _responseData = [[NSMutableData alloc] init];
-        [delegate requestDidStart]; 
+        [self.delegate requestDidStart];
     }
 }
 

@@ -22,14 +22,18 @@
     
     //Block method, short method without using the delegate. 
     DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
-                                                            ressource:@"users"
-                                                           parameters:[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
+                                                            ressource:@"self"
+                                                           parameters:@{@"user": @"Dimillian"}
                                                     shouldEscapeParameters:YES];
     [blockrestRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success){
         if (error || !success) {
             //TODO show error message
         }
         else{
+            NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:data
+                                                                        options:NSJSONReadingAllowFragments
+                                                                          error:nil];
+            NSLog(@"%@", json);
             //TODO do something with response
         }
     }]; 

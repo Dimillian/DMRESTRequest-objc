@@ -9,28 +9,10 @@
 #import <Foundation/Foundation.h>
 
 @protocol DMRESTRequestDelegate;
-
 /**
  DMRESTRequest is here to manage REST request easily within your application
  */
 @interface DMRESTRequest : NSObject <NSURLConnectionDelegate>
-{
-
-    id<DMRESTRequestDelegate>__weak delegate; 
-    BOOL _shouldEscape; 
-    BOOL _sendJSON; 
-    NSString *_method; 
-    NSString *_ressource; 
-    NSDictionary *_parameters;
-    NSMutableData *_responseData; 
-    NSURLConnection *_connection; 
-    
-    
-    NSString *_user; 
-    NSString *_password; 
-    NSString *_authEndPoint; 
-    BOOL _alreadyTried; 
-}
 /**
  A Dictionnary you can use to totally replace defaults HTTPHeaderFields, mostly for advanced user with specific
  server configuration
