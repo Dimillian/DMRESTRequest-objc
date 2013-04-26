@@ -36,7 +36,30 @@
             NSLog(@"%@", json);
             //TODO do something with response
         }
-    }]; 
+    }];
+    
+    
+    //Complexe block usage
+    DMRESTRequest *complexeBlockRequest = [[DMRESTRequest alloc]initWithMethod:@"GET"
+                                                                 ressource:@"self"
+                                                                parameters:@{@"user": @"Dimillian"}
+                                                    shouldEscapeParameters:YES];
+    [complexeBlockRequest
+     executeDetailedBlockRequestReceivedResponse:^(NSURLResponse *response, NSInteger httpStatusCode, float exeptedContentSize) {
+         NSLog(@"Size: %f", exeptedContentSize);
+         NSLog(@"HTTP Status: %d", httpStatusCode);
+        
+    } progressWithReceivedData:^(NSData *data, float progress) {
+        NSLog(@"Progress: %f", progress);
+        
+    } failedWithError:^(NSError *error) {
+        
+    } finishedRequest:^(NSData *completeData) {
+        NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:completeData
+                                                                    options:NSJSONReadingAllowFragments
+                                                                      error:nil];
+        NSLog(@"Complexe block: %@", json);
+    }];
     
     //Using delegate
     //you should cancel the previous request before launching a new one if referenced as a class variable.

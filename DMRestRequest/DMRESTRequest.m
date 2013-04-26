@@ -12,6 +12,11 @@
 #define FILE_EXT @"json"
 #define API_URL @"https://api.virtual-info.info/"
 
+typedef void (^ResponseBlock)(NSURLResponse *, NSInteger, float);
+typedef void (^ProgressBlock)(NSData *, float);
+typedef void (^ErrorBlock)(NSError *);
+typedef void (^CompletionBlock)(NSData *);
+
 @interface DMRESTRequest ()
 {
     BOOL _shouldEscape;
@@ -27,7 +32,15 @@
     NSString *_password;
     NSString *_authEndPoint;
     BOOL _alreadyTried;
+    
+    float _contentSize;
+    
+    
 }
+@property (nonatomic, copy) ResponseBlock responseBlock;
+@property (nonatomic, copy) ProgressBlock progressBlock;
+@property (nonatomic, copy) ErrorBlock errorBlock;
+@property (nonatomic, copy) CompletionBlock completionBlock;
 @end
 
 @implementation DMRESTRequest
@@ -155,12 +168,33 @@ shouldEscapeParameters:(BOOL)escape
                            }]; 
 }
 
+- (void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *, NSInteger, float))responseBlock
+                           progressWithReceivedData:(void (^)(NSData *, float))progressBlock
+                                    failedWithError:(void (^)(NSError *))errorBlock
+                                    finishedRequest:(void (^)(NSData *))completionBlock
+{
+    _completionBlock = completionBlock;
+    _errorBlock = errorBlock;
+    _responseBlock = responseBlock;
+    _progressBlock = progressBlock;
+    _connection = [[NSURLConnection alloc] initWithRequest:[self constructRequest] delegate:self];
+    if (_connection) {
+        _responseData = [[NSMutableData alloc] init];
+        [self.delegate requestDidStart];
+    }
+
+}
+
 -(void)cancelRequest
 {
     [_connection cancel]; 
     _connection = nil; 
     _responseData = nil; 
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    _completionBlock = nil;
+    _errorBlock = nil;
+    _progressBlock = nil;
+    _responseBlock = nil;
 }
 
 
@@ -170,6 +204,10 @@ shouldEscapeParameters:(BOOL)escape
     
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     NSInteger responseStatusCode = [httpResponse statusCode];
+    if (_responseBlock) {
+        _contentSize = (float)[response expectedContentLength];
+        _responseBlock(response, responseStatusCode, _contentSize);
+    }
     if ([self.delegate respondsToSelector:@selector(requestDidRespondWithHTTPStatus:)]) {
         [self.delegate requestDidRespondWithHTTPStatus:responseStatusCode];
     }
@@ -177,7 +215,11 @@ shouldEscapeParameters:(BOOL)escape
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-	[_responseData appendData:data];
+    [_responseData appendData:data];
+    if (_progressBlock) {
+        float progress = ((float) [_responseData length] / (float) _contentSize);
+        _progressBlock(_responseData, progress);
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -186,12 +228,19 @@ shouldEscapeParameters:(BOOL)escape
             [self.delegate requestDidFailBecauseNoActiveConnection];
         }
     }
+    if (_errorBlock) {
+        _errorBlock(error);
+    }
     [self.delegate requestDidFailWithError:error];
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	
+    if(_completionBlock){
+        _completionBlock(_responseData);
+    }
+    
     if ([self.delegate respondsToSelector:@selector(requestDidFinishWithData:)]) {
         [self.delegate requestDidFinishWithData:_responseData];
     }

@@ -81,6 +81,18 @@ shouldEscapeParameters:(BOOL)escape;
 -(void)executeBlockRequest:(void (^)(NSURLResponse *response, NSData *data, NSError *error, BOOL success))handler;
 
 /**
+ Execute a standard request using block, provide different callback as block, it emulate delegate but with block
+ responseBlock: Called first, contain the response, http status code and exepted content size
+ progressBlock: Called multiple time during the request, provide the data downloaded so far and the % of progression
+ errorBlock: Called when the request fail with an error
+ completionBlock: Called once the request is done, provide complete data
+ */
+-(void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *response, NSInteger httpStatusCode, float exeptedContentSize))responseBlock
+                          progressWithReceivedData:(void (^)(NSData *data, float progress))progressBlock
+                                   failedWithError:(void(^)(NSError *error))errorBlock
+                                   finishedRequest:(void(^)(NSData *completeData))completionBlock;
+
+/**
  Cancel the current request
  */
 -(void)cancelRequest; 
