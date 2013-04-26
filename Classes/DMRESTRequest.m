@@ -65,6 +65,8 @@ typedef void (^CompletionBlock)(NSData *);
 
 -(NSMutableURLRequest *)constructRequest
 {
+    NSAssert(self.inUseSettings.baseURL, @"You must set a baseURL");
+    NSAssert(self.inUseSettings.fileExtension, @"You must set a fileExtension");
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setTimeoutInterval:self.inUseSettings.customTimemout];
     if ([_method isEqualToString:@"GET"]) { 

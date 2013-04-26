@@ -17,9 +17,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [[DMRESTSettings sharedSettings]setBaseURL:[NSURL URLWithString:@"https://api.virtual-info.info/"]];
+    [[DMRESTSettings sharedSettings]setBaseURL:[NSURL URLWithString:@"https://api.virtual-info.info"]];
     [[DMRESTSettings sharedSettings]setFileExtension:@"json"];
-    [[DMRESTSettings sharedSettings]setSendJSON:YES];
     
     
     //usage exemple

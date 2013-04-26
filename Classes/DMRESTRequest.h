@@ -16,12 +16,13 @@
 @interface DMRESTRequest : NSObject <NSURLConnectionDelegate>
 /**
  The delegate, provide various feedback when you adopt the protocol and set the delegate
+ You don't need it if you only use block methods
  */
 @property (nonatomic, weak) id<DMRESTRequestDelegate> delegate;
 
 /**
  Set this property to use the passed settings instead of the shared settings
- If not set it will use the DMRESTSettings sharedSettings you've set for you whole application
+ If not set it will use the DMRESTSettings sharedSettings properties you've set for you whole application
  */
 @property (nonatomic, strong) DMRESTSettings *privateCustomSettings;
 
