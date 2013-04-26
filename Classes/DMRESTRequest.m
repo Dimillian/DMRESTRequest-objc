@@ -9,9 +9,6 @@
 #import "DMRESTRequest.h"
 #import "NSString+TotalEscaping.h"
 
-#define FILE_EXT @"json"
-#define API_URL @"https://api.virtual-info.info/"
-
 typedef void (^ResponseBlock)(NSURLResponse *, NSInteger, float);
 typedef void (^ProgressBlock)(NSData *, float);
 typedef void (^ErrorBlock)(NSError *);
@@ -19,14 +16,8 @@ typedef void (^CompletionBlock)(NSData *);
 
 @interface DMRESTRequest ()
 {
-    BOOL _shouldEscape;
-    BOOL _sendJSON;
-    NSString *_method;
-    NSString *_ressource;
-    NSDictionary *_parameters;
     NSMutableData *_responseData;
     NSURLConnection *_connection;
-    
     
     NSString *_user;
     NSString *_password;
@@ -41,6 +32,10 @@ typedef void (^CompletionBlock)(NSData *);
 @property (nonatomic, copy) ProgressBlock progressBlock;
 @property (nonatomic, copy) ErrorBlock errorBlock;
 @property (nonatomic, copy) CompletionBlock completionBlock;
+@property (nonatomic, readonly) DMRESTSettings *inUseSettings;
+@property (nonatomic, strong) NSString *method;
+@property (nonatomic, strong) NSString *ressource;
+@property (nonatomic, strong) NSDictionary *parameters;
 @end
 
 @implementation DMRESTRequest
@@ -48,35 +43,45 @@ typedef void (^CompletionBlock)(NSData *);
 
 -(id)initWithMethod:(NSString *)method  
           ressource:(NSString *)ressource 
-         parameters:(NSDictionary *)parameters 
-shouldEscapeParameters:(BOOL)escape
+         parameters:(NSDictionary *)parameters
 {
     self = [super init]; 
     if (self) {
         _method = method; 
         _ressource = ressource; 
         _parameters = parameters; 
-        _shouldEscape = escape; 
-        _HTTPHeaderFields = nil; 
-        _sendJSON = NO; 
-        _timeout = 60;
     }
     return self; 
+}
+
+-(DMRESTSettings *)inUseSettings
+{
+    if (_privateCustomSettings) {
+        return _privateCustomSettings;
+    }
+    return [DMRESTSettings sharedSettings];
 }
 
 
 -(NSMutableURLRequest *)constructRequest
 {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setTimeoutInterval:_timeout];
+    [request setTimeoutInterval:self.inUseSettings.customTimemout];
     if ([_method isEqualToString:@"GET"]) { 
         [request setURL:[NSURL URLWithString:
-                         [NSString stringWithFormat:API_URL@"/%@.%@?%@", _ressource, FILE_EXT, [self constructParametersString]]]];
+                         [NSString stringWithFormat:@"%@/%@.%@?%@",
+                          self.inUseSettings.baseURL.absoluteString,
+                          _ressource,
+                          self.inUseSettings.fileExtension,
+                          [self constructParametersString]]]];
     }
     else {
-        [request setURL:[NSURL URLWithString:[NSString stringWithFormat:API_URL@"/%@.%@", _ressource, FILE_EXT]]];
+        [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.%@",
+                                              self.inUseSettings.baseURL.absoluteString,
+                                              _ressource,
+                                              self.inUseSettings.fileExtension]]];
         [request setHTTPMethod:_method];
-        if (!_sendJSON) {
+        if (![self.inUseSettings isSendJSON]) {
             NSData *data = [[self constructParametersString]dataUsingEncoding:NSUTF8StringEncoding 
                                                          allowLossyConversion:YES];
             NSString *length = [NSString stringWithFormat:@"%d", [data length]];
@@ -94,8 +99,8 @@ shouldEscapeParameters:(BOOL)escape
         
     }
     
-    if (self.HTTPHeaderFields) {
-        [request setAllHTTPHeaderFields:self.HTTPHeaderFields]; 
+    if (self.inUseSettings.customHTTPHeaderFields) {
+        [request setAllHTTPHeaderFields:self.inUseSettings.customHTTPHeaderFields];
     }
     return request; 
 }
@@ -108,7 +113,7 @@ shouldEscapeParameters:(BOOL)escape
         //Sure you can prefer the block enumerator...
         for(NSString *aKey in enumerator){
             NSString *value = [_parameters valueForKey:aKey]; 
-            if (_shouldEscape) {
+            if ([self.inUseSettings isEscapring]) {
                 if ([value isKindOfClass:[NSString class]]) {
                     NSString *escapedParameter = [value stringByEscapingForURLWithString:value]; 
                     parametersString = [parametersString stringByAppendingFormat:@"%@=%@&", aKey, escapedParameter]; 

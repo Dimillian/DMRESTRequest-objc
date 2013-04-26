@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DMRESTSettings.h"
 
 @protocol DMRESTRequestDelegate;
 /**
@@ -14,39 +15,26 @@
  */
 @interface DMRESTRequest : NSObject <NSURLConnectionDelegate>
 /**
- A Dictionnary you can use to totally replace defaults HTTPHeaderFields, mostly for advanced user with specific
- server configuration
- */
-@property (nonatomic, strong) NSDictionary *HTTPHeaderFields; 
-
-/**
- The timeout the request should wait before throwing an error. 
- Default value is 60 seconds (Think of Edge)
- */
-@property NSTimeInterval timeout;
-
-/**
- Define if parameters should be converted to JSON format (or not) before executing the request
- */
-@property BOOL sendJSON; 
-
-/**
  The delegate, provide various feedback when you adopt the protocol and set the delegate
  */
-@property (nonatomic, weak) id<DMRESTRequestDelegate> delegate; 
+@property (nonatomic, weak) id<DMRESTRequestDelegate> delegate;
+
+/**
+ Set this property to use the passed settings instead of the shared settings
+ If not set it will use the DMRESTSettings sharedSettings you've set for you whole application
+ */
+@property (nonatomic, strong) DMRESTSettings *privateCustomSettings;
 
 /**
  Init a new standard DMRESTRequest object
  @param method The HTTP method, GET/POST/PUT/DELETE/Custom...
  @param ressource The ressource targeted for this request, as the endpoint is a constant, just provide the targeted ressource. Ie: user/new
  @param parameters A dictionnary containing the parameters to send in the request
- @param escape Define if parameters should be escaped or not
  @returns aAnew initialized object
  */
 -(id)initWithMethod:(NSString *)method 
           ressource:(NSString *)ressource 
-         parameters:(NSDictionary *)parameters 
-shouldEscapeParameters:(BOOL)escape;
+         parameters:(NSDictionary *)parameters;
 
 
 /**

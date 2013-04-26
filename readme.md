@@ -20,18 +20,35 @@ This is not a framework nor a complete solution like RESTKit is.
 6. I've wrote a little category to encode the parameters string in UTF-8 and escape it. It is included as **DMRESTRequest** use it. 
 7. Automatic parameters converstion to JSON format for HTTPBody if needed. 
 8. Basic HTTP auth support. 
+9. By default you share your settings between requests, but you can also set custom settings for a specific requests
 
 ## What you should know before using it
 
-###Constants
-You have to edit 2 constants, in **DMRESTRequest**, your `API_URL` and `FILE_EXT`. Those constants represent your server endpoint and the file extensions you use (ie .json).
-URL string is constructed like this `API_URL/ressource.FILE_EXT?parameters`for a GET request.
+###DMRESTSettings
+`DMRESTSettings` manage settings shared between your `DMRESTRequest` instances.
+You set them once (before any request) and then they are used for every other requests.
+The minimum to set is the `baseURL` and `fileExtension`. 
+You set them like this
+
+	[[DMRESTSettings sharedSettings]setBaseURL:[NSURL URLWithString:@"https://api.virtual-info.info/"]];
+	[[DMRESTSettings sharedSettings]setFileExtension:@"json"];
+	
+You can also set an instance of `DMRESTSettings` for a specific requests, so you can prevent this requests to use the shared settings
+Take a look at the initializer of `DMRESTSettings`
+	
+	-(id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL
+                         fileExtension:(NSString *)fileExtension;
+                         
+                    
+And then set it to the property `privateCustomSettings` of `DMRESTRequest`.
+
+Use the singleton `[DMRESTSettings sharedSettings`] to set shared settings.
 
 ###Timeout
-Default `Timeout` interval is 60 seconds You can you can set:  `request.timeout = 30`.
+Default `Timeout` interval is 60 seconds You can you can set: `[[DMRESTSettings sharedSettings]setCustomTimemout:30];`
 
 ###Sending parameters as JSON
-For automatic parameters conversion to JSON format for HTTPBody just set `request.sendJSON = YES` before executing the request.
+For automatic parameters conversion to JSON format for HTTPBody just set `[[DMRESTSettings sharedSettings]setSendJSON:YES]`; before executing the request.
 It will automagically convert your parameters to a JSON string and set thr HTTP stuff like `application/json`.
 
 ###HTTP header fields
@@ -39,9 +56,12 @@ The standard HTTP content-type is hardcoded to `application/x-www-form-urlencode
 
 
 ###Custom HTTP header fields
-With the property `HTTPHeaderFields` you can overwrite the default HTTP header fields by yours. Once this property is modified DMRestRequest will not add any extra parameters itself. So you have to take care of everythings. 
+With the property `customHTTPHeaderFields` you can overwrite the default HTTP header fields by yours. Once this property is modified DMRestRequest will not add any extra parameters itself. So you have to take care of everythings. 
 
 ## Getting started
+Just add every file of the **classes/** folder to your project.
+
+
 This is a really simple set of classes, ready to use, just import **DMRESTRequest**, and **NSString+TotalEscaping** in your project, import **DMRESTRequest.h**  where you wan to make requests and you're done. 
 
 ## Code example
@@ -49,18 +69,23 @@ You will find more detailled examples in the project...
 
 ### using block method
 
-	DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
-                                                            ressource:@"users"
-                                                           parameters:[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
-                                                    shouldEscapeParameters:YES];
+	//Block method, short method without using the delegate. 
+    DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
+                                                            ressource:@"self"
+                                                                parameters:@{@"user": @"Dimillian"}];
     [blockrestRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success){
         if (error || !success) {
             //TODO show error message
         }
         else{
+            NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:data
+                                                                        options:NSJSONReadingAllowFragments
+                                                                          error:nil];
+            NSLog(@"%@", json);
             //TODO do something with response
         }
-    }]; 
+    }];
+
    
    
 ### using delegate 

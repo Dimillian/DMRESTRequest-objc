@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		530A29D2172A9743001EDA3E /* DMRESTRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A29CD172A9743001EDA3E /* DMRESTRequest.m */; };
+		530A29D3172A9743001EDA3E /* DMRESTSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A29CF172A9743001EDA3E /* DMRESTSettings.m */; };
+		530A29D4172A9743001EDA3E /* NSString+TotalEscaping.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A29D1172A9743001EDA3E /* NSString+TotalEscaping.m */; };
 		9F59A2BB1529A093003D6047 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F59A2BA1529A093003D6047 /* UIKit.framework */; };
 		9F59A2BD1529A093003D6047 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F59A2BC1529A093003D6047 /* Foundation.framework */; };
 		9F59A2BF1529A093003D6047 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F59A2BE1529A093003D6047 /* CoreGraphics.framework */; };
@@ -15,13 +18,17 @@
 		9F59A2CB1529A093003D6047 /* DMAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F59A2CA1529A093003D6047 /* DMAppDelegate.m */; };
 		9F59A2CE1529A093003D6047 /* DMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F59A2CD1529A093003D6047 /* DMViewController.m */; };
 		9F59A2D11529A093003D6047 /* DMViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9F59A2CF1529A093003D6047 /* DMViewController.xib */; };
-		9F59A2DF1529A14A003D6047 /* DMRESTRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F59A2D91529A0AC003D6047 /* DMRESTRequest.m */; };
-		9F59A2E31529A1A0003D6047 /* NSString+TotalEscaping.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F59A2E21529A198003D6047 /* NSString+TotalEscaping.m */; };
 		9F59A2E51529AC05003D6047 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 9F59A2E41529AC05003D6047 /* LICENSE */; };
 		9F9F98D6163835EA002018D7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9F9F98D5163835EA002018D7 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		530A29CC172A9743001EDA3E /* DMRESTRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMRESTRequest.h; path = Classes/DMRESTRequest.h; sourceTree = SOURCE_ROOT; };
+		530A29CD172A9743001EDA3E /* DMRESTRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMRESTRequest.m; path = Classes/DMRESTRequest.m; sourceTree = SOURCE_ROOT; };
+		530A29CE172A9743001EDA3E /* DMRESTSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMRESTSettings.h; path = Classes/DMRESTSettings.h; sourceTree = SOURCE_ROOT; };
+		530A29CF172A9743001EDA3E /* DMRESTSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMRESTSettings.m; path = Classes/DMRESTSettings.m; sourceTree = SOURCE_ROOT; };
+		530A29D0172A9743001EDA3E /* NSString+TotalEscaping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+TotalEscaping.h"; path = "Classes/NSString+TotalEscaping.h"; sourceTree = SOURCE_ROOT; };
+		530A29D1172A9743001EDA3E /* NSString+TotalEscaping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+TotalEscaping.m"; path = "Classes/NSString+TotalEscaping.m"; sourceTree = SOURCE_ROOT; };
 		9F59A2B61529A093003D6047 /* DMRestRequest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DMRestRequest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F59A2BA1529A093003D6047 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9F59A2BC1529A093003D6047 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -35,10 +42,6 @@
 		9F59A2CC1529A093003D6047 /* DMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMViewController.h; sourceTree = "<group>"; };
 		9F59A2CD1529A093003D6047 /* DMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMViewController.m; sourceTree = "<group>"; };
 		9F59A2D01529A093003D6047 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DMViewController.xib; sourceTree = "<group>"; };
-		9F59A2D81529A0AC003D6047 /* DMRESTRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMRESTRequest.h; sourceTree = "<group>"; };
-		9F59A2D91529A0AC003D6047 /* DMRESTRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMRESTRequest.m; sourceTree = "<group>"; };
-		9F59A2E11529A198003D6047 /* NSString+TotalEscaping.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+TotalEscaping.h"; sourceTree = "<group>"; };
-		9F59A2E21529A198003D6047 /* NSString+TotalEscaping.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+TotalEscaping.m"; sourceTree = "<group>"; };
 		9F59A2E41529AC05003D6047 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		9F9F98D5163835EA002018D7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -115,8 +118,10 @@
 		9F59A2D71529A09D003D6047 /* DMRestRequest */ = {
 			isa = PBXGroup;
 			children = (
-				9F59A2D81529A0AC003D6047 /* DMRESTRequest.h */,
-				9F59A2D91529A0AC003D6047 /* DMRESTRequest.m */,
+				530A29CC172A9743001EDA3E /* DMRESTRequest.h */,
+				530A29CD172A9743001EDA3E /* DMRESTRequest.m */,
+				530A29CE172A9743001EDA3E /* DMRESTSettings.h */,
+				530A29CF172A9743001EDA3E /* DMRESTSettings.m */,
 			);
 			name = DMRestRequest;
 			sourceTree = "<group>";
@@ -124,8 +129,8 @@
 		9F59A2E01529A185003D6047 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				9F59A2E11529A198003D6047 /* NSString+TotalEscaping.h */,
-				9F59A2E21529A198003D6047 /* NSString+TotalEscaping.m */,
+				530A29D0172A9743001EDA3E /* NSString+TotalEscaping.h */,
+				530A29D1172A9743001EDA3E /* NSString+TotalEscaping.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -195,11 +200,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F59A2E31529A1A0003D6047 /* NSString+TotalEscaping.m in Sources */,
-				9F59A2DF1529A14A003D6047 /* DMRESTRequest.m in Sources */,
 				9F59A2C71529A093003D6047 /* main.m in Sources */,
 				9F59A2CB1529A093003D6047 /* DMAppDelegate.m in Sources */,
 				9F59A2CE1529A093003D6047 /* DMViewController.m in Sources */,
+				530A29D2172A9743001EDA3E /* DMRESTRequest.m in Sources */,
+				530A29D3172A9743001EDA3E /* DMRESTSettings.m in Sources */,
+				530A29D4172A9743001EDA3E /* NSString+TotalEscaping.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

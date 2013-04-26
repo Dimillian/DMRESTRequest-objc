@@ -17,14 +17,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[DMRESTSettings sharedSettings]setBaseURL:[NSURL URLWithString:@"https://api.virtual-info.info/"]];
+    [[DMRESTSettings sharedSettings]setFileExtension:@"json"];
+    [[DMRESTSettings sharedSettings]setSendJSON:YES];
+    
     
     //usage exemple
     
     //Block method, short method without using the delegate. 
     DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
                                                             ressource:@"self"
-                                                           parameters:@{@"user": @"Dimillian"}
-                                                    shouldEscapeParameters:YES];
+                                                                parameters:@{@"user": @"Dimillian"}];
     [blockrestRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success){
         if (error || !success) {
             //TODO show error message
@@ -42,8 +45,7 @@
     //Complexe block usage
     DMRESTRequest *complexeBlockRequest = [[DMRESTRequest alloc]initWithMethod:@"GET"
                                                                  ressource:@"self"
-                                                                parameters:@{@"user": @"Dimillian"}
-                                                    shouldEscapeParameters:YES];
+                                                                    parameters:@{@"user": @"Dimillian"}];
     [complexeBlockRequest
      executeDetailedBlockRequestReceivedResponse:^(NSURLResponse *response, NSInteger httpStatusCode, float exeptedContentSize) {
          NSLog(@"Size: %f", exeptedContentSize);
@@ -68,9 +70,8 @@
     restRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
                                              ressource:@"users"
                                             parameters:
-                                        [NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
-                                        shouldEscapeParameters:YES];
-    [restRequest setDelegate:self]; 
+                   [NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"]];
+    [restRequest setDelegate:self];
     [restRequest executeRequest]; 
     
     
@@ -78,10 +79,13 @@
     DMRESTRequest *newRequest = [[DMRESTRequest alloc]initWithMethod:@"POST" 
                                                                  ressource:@"users"
                                                                 parameters:
-                        [NSDictionary dictionaryWithObjectsAndKeys:@"13", @"userId", @"Dimillian", @"username", nil]                    shouldEscapeParameters:YES];
-    newRequest.timeout = 50; 
-    newRequest.sendJSON = YES; 
-    [newRequest setHTTPHeaderFields:[NSDictionary dictionaryWithObject:@"From: user@example.com" forKey:@"From"]]; 
+                                 [NSDictionary dictionaryWithObjectsAndKeys:@"13", @"userId", @"Dimillian", @"username", nil]];
+    DMRESTSettings *privateSettings = [[DMRESTSettings alloc]initForPrivateSettingsWithBaseURL:
+                                       [NSURL URLWithString:@"http://google.com"]
+                                                                                 fileExtension:@"json"];
+    privateSettings.customTimemout = 40;
+    privateSettings.sendJSON = YES;
+    privateSettings.GZIP = YES;
     [newRequest executeRequest]; 
     [newRequest cancelRequest]; 
     
