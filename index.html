@@ -58,20 +58,38 @@ It's allow you to launch REST Requests to your server in 2 line, literally. </p>
 <li>I've wrote a little category to encode the parameters string in UTF-8 and escape it. It is included as <strong>DMRESTRequest</strong> use it. </li>
 <li>Automatic parameters converstion to JSON format for HTTPBody if needed. </li>
 <li>Basic HTTP auth support. </li>
+<li>By default you share your settings between requests, but you can also set custom settings for a specific requests</li>
 </ol><h2>What you should know before using it</h2>
 
-<h3>Constants</h3>
+<h3>DMRESTSettings</h3>
 
-<p>You have to edit 2 constants, in <strong>DMRESTRequest</strong>, your <code>API_URL</code> and <code>FILE_EXT</code>. Those constants represent your server endpoint and the file extensions you use (ie .json).
-URL string is constructed like this <code>API_URL/ressource.FILE_EXT?parameters</code>for a GET request.</p>
+<p><code>DMRESTSettings</code> manage settings shared between your <code>DMRESTRequest</code> instances.
+You set them once (before any request) and then they are used for every other requests.
+The minimum to set is the <code>baseURL</code> and <code>fileExtension</code>. 
+You set them like this</p>
+
+<pre><code>[[DMRESTSettings sharedSettings]setBaseURL:[NSURL URLWithString:@"https://api.virtual-info.info/"]];
+[[DMRESTSettings sharedSettings]setFileExtension:@"json"];
+</code></pre>
+
+<p>You can also set an instance of <code>DMRESTSettings</code> for a specific requests, so you can prevent this requests to use the shared settings
+Take a look at the initializer of <code>DMRESTSettings</code></p>
+
+<pre><code>-(id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL
+                     fileExtension:(NSString *)fileExtension;
+</code></pre>
+
+<p>And then set it to the property <code>privateCustomSettings</code> of <code>DMRESTRequest</code>.</p>
+
+<p>Use the singleton <code>[DMRESTSettings sharedSettings</code>] to set shared settings.</p>
 
 <h3>Timeout</h3>
 
-<p>Default <code>Timeout</code> interval is 60 seconds You can you can set:  <code>request.timeout = 30</code>.</p>
+<p>Default <code>Timeout</code> interval is 60 seconds You can you can set: <code>[[DMRESTSettings sharedSettings]setCustomTimemout:30];</code></p>
 
 <h3>Sending parameters as JSON</h3>
 
-<p>For automatic parameters conversion to JSON format for HTTPBody just set <code>request.sendJSON = YES</code> before executing the request.
+<p>For automatic parameters conversion to JSON format for HTTPBody just set <code>[[DMRESTSettings sharedSettings]setSendJSON:YES]</code>; before executing the request.
 It will automagically convert your parameters to a JSON string and set thr HTTP stuff like <code>application/json</code>.</p>
 
 <h3>HTTP header fields</h3>
@@ -80,9 +98,11 @@ It will automagically convert your parameters to a JSON string and set thr HTTP 
 
 <h3>Custom HTTP header fields</h3>
 
-<p>With the property <code>HTTPHeaderFields</code> you can overwrite the default HTTP header fields by yours. Once this property is modified DMRestRequest will not add any extra parameters itself. So you have to take care of everythings. </p>
+<p>With the property <code>customHTTPHeaderFields</code> you can overwrite the default HTTP header fields by yours. Once this property is modified DMRestRequest will not add any extra parameters itself. So you have to take care of everythings. </p>
 
 <h2>Getting started</h2>
+
+<p>Just add every file of the <strong>classes/</strong> folder to your project.</p>
 
 <p>This is a really simple set of classes, ready to use, just import <strong>DMRESTRequest</strong>, and <strong>NSString+TotalEscaping</strong> in your project, import <strong>DMRESTRequest.h</strong>  where you wan to make requests and you're done. </p>
 
@@ -92,18 +112,22 @@ It will automagically convert your parameters to a JSON string and set thr HTTP 
 
 <h3>using block method</h3>
 
-<pre><code>DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
-                                                        ressource:@"users"
-                                                       parameters:[NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"] 
-                                                shouldEscapeParameters:YES];
+<pre><code>//Block method, short method without using the delegate. 
+DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
+                                                        ressource:@"self"
+                                                            parameters:@{@"user": @"Dimillian"}];
 [blockrestRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success){
     if (error || !success) {
         //TODO show error message
     }
     else{
+        NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:data
+                                                                    options:NSJSONReadingAllowFragments
+                                                                      error:nil];
+        NSLog(@"%@", json);
         //TODO do something with response
     }
-}]; 
+}];
 </code></pre>
 
 <h3>using delegate</h3>
