@@ -224,7 +224,7 @@ typedef void (^CompletionBlock)(NSData *);
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     [_responseData appendData:data];
     if (_progressBlock) {
-        float progress = ((float) [_responseData length] / (float) _contentSize);
+        float progress = ((float) [_responseData length] / _contentSize);
         _progressBlock(_responseData, progress);
     }
 }
