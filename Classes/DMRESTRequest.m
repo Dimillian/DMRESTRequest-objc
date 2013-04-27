@@ -88,62 +88,74 @@ typedef void (^CompletionBlock)(NSData *);
                                                          allowLossyConversion:YES];
             NSString *length = [NSString stringWithFormat:@"%d", [data length]];
             [request setValue:length forHTTPHeaderField:@"Content-Length"];
-            [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
             [request setHTTPBody:data];
         }
         else {
-            NSString *length = [NSString stringWithFormat:@"%d", [self parametersToJSON].length]; 
-            [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-            [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            NSData *jsonParameters = [self parametersToJSON];
+            NSString *length = [NSString stringWithFormat:@"%d", jsonParameters.length];
             [request setValue:length forHTTPHeaderField:@"Content-Length"];
-            [request setHTTPBody:[self parametersToJSON]]; 
+            [request setHTTPBody:jsonParameters];
         }
+        [self.inUseSettings.permanentHTTPHeaderFields enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            NSString *stringKey = (NSString *)key;
+            NSString *value = (NSString *)obj;
+            [request setValue:value forHTTPHeaderField:stringKey];
+        }];
         
-    }
-    
-    if (self.inUseSettings.customHTTPHeaderFields) {
-        [request setAllHTTPHeaderFields:self.inUseSettings.customHTTPHeaderFields];
     }
     return request; 
 }
 
 -(NSString *)constructParametersString
 {
-    NSString  *parametersString = [[NSString alloc]init];
+    __block NSString *parametersString = [[NSString alloc]init];
     if (_parameters) {
-        NSEnumerator *enumerator = [_parameters keyEnumerator];
-        //Sure you can prefer the block enumerator...
-        for(NSString *aKey in enumerator){
-            NSString *value = [_parameters valueForKey:aKey]; 
-            if ([self.inUseSettings isEscapring]) {
-                if ([value isKindOfClass:[NSString class]]) {
-                    NSString *escapedParameter = [value stringByEscapingForURLWithString:value]; 
-                    parametersString = [parametersString stringByAppendingFormat:@"%@=%@&", aKey, escapedParameter]; 
+        [_parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            if (self.inUseSettings.isEscaping) {
+                if ([obj isKindOfClass:[NSString class]]) {
+                    NSString *string = (NSString *)obj;
+                    NSString *escapedParameter = [string stringByEscapingForURLWithString:string];
+                    parametersString = [parametersString stringByAppendingFormat:@"%@=%@&", key, escapedParameter];
                 }
-                else {
-                    parametersString = [parametersString stringByAppendingFormat:@"%@=%@&", aKey, value]; 
+                else{
+                    parametersString = [parametersString stringByAppendingFormat:@"%@=%@&", key, obj];
                 }
             }
-            else {  
-                parametersString = [parametersString stringByAppendingFormat:@"%@=%@&", aKey, value]; 
+            else{
+                parametersString = [parametersString stringByAppendingFormat:@"%@=%@&", key, obj];
             }
-        }
-        parametersString = [parametersString stringByReplacingOccurrencesOfString:@"%3D" withString:@"="];
-        if ([parametersString length] > 0) {
-            parametersString = [parametersString substringToIndex:[parametersString length] - 1];
-        }
+        }];
     } 
-    else {
-        parametersString = @""; 
+    if (self.inUseSettings.permanentParameters) {
+        [self.inUseSettings.permanentParameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            parametersString = [parametersString stringByAppendingFormat:@"%@=%@&", key, obj];
+        }];
     }
-    return parametersString; 
+    
+    parametersString = [parametersString stringByReplacingOccurrencesOfString:@"%3D" withString:@"="];
+    if ([parametersString length] > 0) {
+        parametersString = [parametersString substringToIndex:[parametersString length] - 1];
+    }
+    
+    if (!_parameters && !self.inUseSettings.permanentParameters) {
+         parametersString = @"";
+    }
+    return parametersString;
 }
 
 -(NSData *)parametersToJSON
 {
-    NSError *error = nil; 
-    
-    return [NSJSONSerialization dataWithJSONObject:_parameters 
+    NSError *error = nil;
+    __block NSMutableDictionary *finalParameters = [[NSMutableDictionary alloc]init];
+    [_parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [finalParameters setObject:obj forKey:key];
+    }];
+    if (self.inUseSettings.permanentParameters) {
+        [self.inUseSettings.permanentParameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [finalParameters setObject:obj forKey:key];
+        }];
+    }
+    return [NSJSONSerialization dataWithJSONObject:finalParameters
                                            options:NSJSONWritingPrettyPrinted 
                                              error:&error]; 
 }

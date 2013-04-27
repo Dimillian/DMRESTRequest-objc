@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>DMRESTRequestTest.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>DMRestRequest.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -12,6 +17,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>9F0322C5172BE39800521369</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>9F59A2B51529A093003D6047</key>
 		<dict>
 			<key>primary</key>

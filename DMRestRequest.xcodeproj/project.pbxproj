@@ -10,6 +10,12 @@
 		530A29D2172A9743001EDA3E /* DMRESTRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A29CD172A9743001EDA3E /* DMRESTRequest.m */; };
 		530A29D3172A9743001EDA3E /* DMRESTSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A29CF172A9743001EDA3E /* DMRESTSettings.m */; };
 		530A29D4172A9743001EDA3E /* NSString+TotalEscaping.m in Sources */ = {isa = PBXBuildFile; fileRef = 530A29D1172A9743001EDA3E /* NSString+TotalEscaping.m */; };
+		9F032278172BE25D00521369 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F032277172BE25D00521369 /* SenTestingKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		9F0322C7172BE39800521369 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F032277172BE25D00521369 /* SenTestingKit.framework */; };
+		9F0322C8172BE39800521369 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F59A2BA1529A093003D6047 /* UIKit.framework */; };
+		9F0322C9172BE39800521369 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F59A2BC1529A093003D6047 /* Foundation.framework */; };
+		9F0322CF172BE39800521369 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9F0322CD172BE39800521369 /* InfoPlist.strings */; };
+		9F0322D2172BE39800521369 /* DMRESTRequestTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F0322D1172BE39800521369 /* DMRESTRequestTest.m */; };
 		9F59A2BB1529A093003D6047 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F59A2BA1529A093003D6047 /* UIKit.framework */; };
 		9F59A2BD1529A093003D6047 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F59A2BC1529A093003D6047 /* Foundation.framework */; };
 		9F59A2BF1529A093003D6047 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F59A2BE1529A093003D6047 /* CoreGraphics.framework */; };
@@ -22,6 +28,16 @@
 		9F9F98D6163835EA002018D7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9F9F98D5163835EA002018D7 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		9F0322D7172BE5A500521369 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9F59A2AD1529A092003D6047 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9F0322C5172BE39800521369;
+			remoteInfo = DMRESTRequestTest;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		530A29CC172A9743001EDA3E /* DMRESTRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMRESTRequest.h; path = Classes/DMRESTRequest.h; sourceTree = SOURCE_ROOT; };
 		530A29CD172A9743001EDA3E /* DMRESTRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMRESTRequest.m; path = Classes/DMRESTRequest.m; sourceTree = SOURCE_ROOT; };
@@ -29,6 +45,13 @@
 		530A29CF172A9743001EDA3E /* DMRESTSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMRESTSettings.m; path = Classes/DMRESTSettings.m; sourceTree = SOURCE_ROOT; };
 		530A29D0172A9743001EDA3E /* NSString+TotalEscaping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+TotalEscaping.h"; path = "Classes/NSString+TotalEscaping.h"; sourceTree = SOURCE_ROOT; };
 		530A29D1172A9743001EDA3E /* NSString+TotalEscaping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+TotalEscaping.m"; path = "Classes/NSString+TotalEscaping.m"; sourceTree = SOURCE_ROOT; };
+		9F032277172BE25D00521369 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		9F0322C6172BE39800521369 /* DMRESTRequestTest.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DMRESTRequestTest.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F0322CC172BE39800521369 /* DMRESTRequestTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DMRESTRequestTest-Info.plist"; sourceTree = "<group>"; };
+		9F0322CE172BE39800521369 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9F0322D0172BE39800521369 /* DMRESTRequestTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DMRESTRequestTest.h; sourceTree = "<group>"; };
+		9F0322D1172BE39800521369 /* DMRESTRequestTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DMRESTRequestTest.m; sourceTree = "<group>"; };
+		9F0322D3172BE39800521369 /* DMRESTRequestTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DMRESTRequestTest-Prefix.pch"; sourceTree = "<group>"; };
 		9F59A2B61529A093003D6047 /* DMRestRequest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DMRestRequest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F59A2BA1529A093003D6047 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9F59A2BC1529A093003D6047 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -47,10 +70,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9F0322C2172BE39800521369 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F0322C7172BE39800521369 /* SenTestingKit.framework in Frameworks */,
+				9F0322C8172BE39800521369 /* UIKit.framework in Frameworks */,
+				9F0322C9172BE39800521369 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9F59A2B31529A093003D6047 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9F032278172BE25D00521369 /* SenTestingKit.framework in Frameworks */,
 				9F59A2BB1529A093003D6047 /* UIKit.framework in Frameworks */,
 				9F59A2BD1529A093003D6047 /* Foundation.framework in Frameworks */,
 				9F59A2BF1529A093003D6047 /* CoreGraphics.framework in Frameworks */,
@@ -60,11 +94,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9F0322CA172BE39800521369 /* DMRESTRequestTest */ = {
+			isa = PBXGroup;
+			children = (
+				9F0322D0172BE39800521369 /* DMRESTRequestTest.h */,
+				9F0322D1172BE39800521369 /* DMRESTRequestTest.m */,
+				9F0322CB172BE39800521369 /* Supporting Files */,
+			);
+			path = DMRESTRequestTest;
+			sourceTree = "<group>";
+		};
+		9F0322CB172BE39800521369 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9F0322CC172BE39800521369 /* DMRESTRequestTest-Info.plist */,
+				9F0322CD172BE39800521369 /* InfoPlist.strings */,
+				9F0322D3172BE39800521369 /* DMRESTRequestTest-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		9F59A2AB1529A092003D6047 = {
 			isa = PBXGroup;
 			children = (
 				9F9F98D5163835EA002018D7 /* Default-568h@2x.png */,
 				9F59A2C01529A093003D6047 /* DMRestRequest */,
+				9F0322CA172BE39800521369 /* DMRESTRequestTest */,
 				9F59A2B91529A093003D6047 /* Frameworks */,
 				9F59A2B71529A093003D6047 /* Products */,
 			);
@@ -74,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				9F59A2B61529A093003D6047 /* DMRestRequest.app */,
+				9F0322C6172BE39800521369 /* DMRESTRequestTest.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -81,6 +137,7 @@
 		9F59A2B91529A093003D6047 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9F032277172BE25D00521369 /* SenTestingKit.framework */,
 				9F59A2BA1529A093003D6047 /* UIKit.framework */,
 				9F59A2BC1529A093003D6047 /* Foundation.framework */,
 				9F59A2BE1529A093003D6047 /* CoreGraphics.framework */,
@@ -138,6 +195,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		9F0322C5172BE39800521369 /* DMRESTRequestTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9F0322D4172BE39800521369 /* Build configuration list for PBXNativeTarget "DMRESTRequestTest" */;
+			buildPhases = (
+				9F0322C1172BE39800521369 /* Sources */,
+				9F0322C2172BE39800521369 /* Frameworks */,
+				9F0322C3172BE39800521369 /* Resources */,
+				9F0322C4172BE39800521369 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DMRESTRequestTest;
+			productName = DMRESTRequestTest;
+			productReference = 9F0322C6172BE39800521369 /* DMRESTRequestTest.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 		9F59A2B51529A093003D6047 /* DMRestRequest */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9F59A2D41529A093003D6047 /* Build configuration list for PBXNativeTarget "DMRestRequest" */;
@@ -149,6 +224,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				9F0322D8172BE5A500521369 /* PBXTargetDependency */,
 			);
 			name = DMRestRequest;
 			productName = DMRestRequest;
@@ -177,11 +253,20 @@
 			projectRoot = "";
 			targets = (
 				9F59A2B51529A093003D6047 /* DMRestRequest */,
+				9F0322C5172BE39800521369 /* DMRESTRequestTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9F0322C3172BE39800521369 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F0322CF172BE39800521369 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9F59A2B41529A093003D6047 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -195,7 +280,31 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		9F0322C4172BE39800521369 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		9F0322C1172BE39800521369 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F0322D2172BE39800521369 /* DMRESTRequestTest.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9F59A2B21529A093003D6047 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -211,7 +320,23 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		9F0322D8172BE5A500521369 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9F0322C5172BE39800521369 /* DMRESTRequestTest */;
+			targetProxy = 9F0322D7172BE5A500521369 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		9F0322CD172BE39800521369 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9F0322CE172BE39800521369 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		9F59A2C31529A093003D6047 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -231,6 +356,49 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		9F0322D5172BE39800521369 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/DMRestRequest.app/DMRestRequest";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DMRESTRequestTest/DMRESTRequestTest-Prefix.pch";
+				INFOPLIST_FILE = "DMRESTRequestTest/DMRESTRequestTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		9F0322D6172BE39800521369 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/DMRestRequest.app/DMRestRequest";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DMRESTRequestTest/DMRESTRequestTest-Prefix.pch";
+				INFOPLIST_FILE = "DMRESTRequestTest/DMRESTRequestTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
 		9F59A2D21529A093003D6047 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -287,6 +455,10 @@
 		9F59A2D51529A093003D6047 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DMRestRequest/DMRestRequest-Prefix.pch";
 				INFOPLIST_FILE = "DMRestRequest/DMRestRequest-Info.plist";
@@ -298,6 +470,10 @@
 		9F59A2D61529A093003D6047 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DMRestRequest/DMRestRequest-Prefix.pch";
 				INFOPLIST_FILE = "DMRestRequest/DMRestRequest-Info.plist";
@@ -309,6 +485,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9F0322D4172BE39800521369 /* Build configuration list for PBXNativeTarget "DMRESTRequestTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9F0322D5172BE39800521369 /* Debug */,
+				9F0322D6172BE39800521369 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		9F59A2B01529A092003D6047 /* Build configuration list for PBXProject "DMRestRequest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

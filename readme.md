@@ -45,18 +45,25 @@ And then set it to the property `privateCustomSettings` of `DMRESTRequest`.
 Use the singleton `[DMRESTSettings sharedSettings`] to set shared settings.
 
 ###Timeout
-Default `Timeout` interval is 60 seconds You can you can set: `[[DMRESTSettings sharedSettings]setCustomTimemout:30];`
+Default `Timeout` interval is 60 seconds You can you can set:
+
+`[[DMRESTSettings sharedSettings]setCustomTimemout:30];`
 
 ###Sending parameters as JSON
-For automatic parameters conversion to JSON format for HTTPBody just set `[[DMRESTSettings sharedSettings]setSendJSON:YES]`; before executing the request.
-It will automagically convert your parameters to a JSON string and set thr HTTP stuff like `application/json`.
+For automatic parameters conversion to JSON format for HTTPBody just set `[[DMRESTSettings sharedSettings]setSendJSON:YES]` before executing the request.
+It will automagically convert your parameters to a JSON string and set the HTTP stuff like `application/json`.
 
 ###HTTP header fields
 The standard HTTP content-type is hardcoded to `application/x-www-form-urlencoded`, you're free to make it dynamic if you need a custom one. But for most/all of your requests it should works. (It's set to `application/json` if you send params as JSON).
 
 
-###Custom HTTP header fields
-With the property `customHTTPHeaderFields` you can overwrite the default HTTP header fields by yours. Once this property is modified DMRestRequest will not add any extra parameters itself. So you have to take care of everythings. 
+###Parmanent HTTP header fields
+You can add custom Permanent HTTP header fields with the `DMRESTSettings` method
+`- (void)setPermanentHeaderFieldValue:(NSString *)value forHeaderField:(NSString *)header;`
+
+###Permanent parameters
+You can add permanent parameters such as a Auth Token with the `DMRESTSettings` method
+`- (void)setPermananentParameterValue:(id)value forParameter:(NSString *)parameter;`
 
 ## Getting started
 Just add every file of the **classes/** folder to your project.

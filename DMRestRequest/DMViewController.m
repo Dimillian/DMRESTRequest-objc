@@ -19,8 +19,9 @@
     [super viewDidLoad];
     [[DMRESTSettings sharedSettings]setBaseURL:[NSURL URLWithString:@"https://api.virtual-info.info"]];
     [[DMRESTSettings sharedSettings]setFileExtension:@"json"];
-    
-    
+    //Adding some permanent parameter like a AuthToken
+    [[DMRESTSettings sharedSettings]setPermananentParameterValue:@"1234" forParameter:@"AuthToken"];
+    NSLog(@"%@", [[DMRESTSettings sharedSettings]valueForPermanentParameter:@"AuthToken"]);
     //usage exemple
     
     //Block method, short method without using the delegate. 
@@ -62,6 +63,23 @@
         NSLog(@"Complexe block: %@", json);
     }];
     
+    //Using JSON in BODY with private settings, so only for 1 request
+    DMRESTSettings *settings = [[DMRESTSettings alloc]initForPrivateSettingsFromSharedSettings];
+    [settings setSendJSON:YES];
+    DMRESTRequest *postRequest = [[DMRESTRequest alloc]initWithMethod:@"POST"
+                                                        ressource:@"self"
+                                                       parameters:@{@"user": @"dimillian",
+                              @"movies": [NSNumber numberWithInt:1]}];
+    [postRequest setPrivateCustomSettings:settings];
+    [postRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success) {
+        if (success) {
+            NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:data
+                                                                        options:NSJSONReadingAllowFragments
+                                                                          error:nil];
+            NSLog(@"%@", json);
+        }
+    }];
+    
     //Using delegate
     //you should cancel the previous request before launching a new one if referenced as a class variable.
     [restRequest cancelRequest]; 
@@ -73,7 +91,6 @@
     [restRequest setDelegate:self];
     [restRequest executeRequest]; 
     
-    
     //Other examples with multiple parameters and other properties
     DMRESTRequest *newRequest = [[DMRESTRequest alloc]initWithMethod:@"POST" 
                                                                  ressource:@"users"
@@ -84,7 +101,6 @@
                                                                                  fileExtension:@"json"];
     privateSettings.customTimemout = 40;
     privateSettings.sendJSON = YES;
-    privateSettings.GZIP = YES;
     [newRequest executeRequest]; 
     [newRequest cancelRequest]; 
     
