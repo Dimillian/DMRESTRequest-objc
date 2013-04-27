@@ -112,8 +112,8 @@
     [authRequest setPrivateCustomSettings:authSettings];
     [authRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success) {
         NSLog(@"%@", response);
-        NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-        NSLog(@"%@", json);
+        NSString *string = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"%@", string);
     } requestAskforHTTPAuth:^DMRESTHTTPAuthCredential *{
         NSLog(@"ASK LOGIn");
         DMRESTHTTPAuthCredential *login = [[DMRESTHTTPAuthCredential alloc]initWithLogin:@"azerty" password:@"azerty" continueLogin:YES];
