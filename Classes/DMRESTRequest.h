@@ -24,12 +24,12 @@
 
 /**
  Set this property to use the passed settings instead of the shared settings
- If not set it will use the DMRESTSettings sharedSettings properties you've set for you whole application
+ If not set it will use the DMRESTSettings sharedSettings settings you've set.
  */
 @property (nonatomic, strong) DMRESTSettings *privateCustomSettings;
 
 /**
- Init a new standard DMRESTRequest object
+ Designated initializer, init a new standard DMRESTRequest object
  @param method The HTTP method, GET/POST/PUT/DELETE/Custom...
  @param ressource The ressource targeted for this request, as the endpoint is a constant, just provide the targeted ressource. Ie: user/new
  @param parameters A dictionnary containing the parameters to send in the request

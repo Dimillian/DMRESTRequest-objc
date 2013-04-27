@@ -16,7 +16,8 @@
 @interface DMRESTSettings : NSObject
 
 /**
- Designated singleton access to set and access the shares settings
+ Designated singleton access to set and access the shared settings
+ This singleton is used for all your DMRESTRequest if you don't set privateCustomSettings property to them
  */
 +(DMRESTSettings *)sharedSettings;
 
@@ -24,13 +25,13 @@
  Initiliazer if you don't want to use shared settings
  Create an instance of this class and set it to the privateCustomSettings field of your DMRESTRequest
  It will prevent it to use the shared settings but use the passed settings instead
- Will not copy current shared settings
+ Will not copy current shared settings when created
  */
 -(id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL
                          fileExtension:(NSString *)fileExtension;
 /**
  Initiliazer if you want to create private settings for a specific DMRESTRequest
- Will copy current shared settings
+ Will copy current shared settings when created
  */
 -(id)initForPrivateSettingsFromSharedSettings;
 
