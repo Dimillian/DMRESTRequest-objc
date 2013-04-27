@@ -27,12 +27,6 @@
 
 - (void)testSettingsPrivacy
 {
-    STAssertEqualObjects(@"http://google.com",
-                         [[[DMRESTSettings sharedSettings]baseURL]absoluteString],
-                         @"FAILURE: Base URL not properly set");
-    STAssertEqualObjects(@"json",
-                         [[DMRESTSettings sharedSettings]fileExtension],
-                         @"FAILURE: File extension not properly set");
     DMRESTSettings *privateSharedSetting = [[DMRESTSettings alloc]initForPrivateSettingsFromSharedSettings];
     STAssertEqualObjects(@"http://google.com",
                         privateSharedSetting.baseURL.absoluteString,
@@ -80,13 +74,12 @@
 {
     [[DMRESTSettings sharedSettings]setBaseURL:[NSURL URLWithString:@"http://google.com"]];
     [[DMRESTSettings sharedSettings]setFileExtension:@"json"];
-    
-    DMRESTRequest *request = [[DMRESTRequest alloc]initWithMethod:@"GET" ressource:@"self" parameters:@{@"user": @"dimillian"}];
-    [request executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success) {
-        if (success) {
-            
-        }
-    }];
+    STAssertEqualObjects(@"http://google.com",
+                         [[[DMRESTSettings sharedSettings]baseURL]absoluteString],
+                         @"FAILURE: Base URL not properly set");
+    STAssertEqualObjects(@"json",
+                         [[DMRESTSettings sharedSettings]fileExtension],
+                         @"FAILURE: File extension not properly set");
 }
 
 @end
