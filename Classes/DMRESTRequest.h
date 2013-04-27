@@ -57,8 +57,9 @@
 -(void)executeHTTPAuthRequest;  
 
 /**
- Execute standard request and provide feedback through deleate methods that you need to implement when executing the request
+ Execute standard request and provide feedback through delegate methods that you need to implement when executing the request
  with this method
+ Might be deprecated in the future as the full block method might replace this one
  */
 -(void)executeRequest;
 

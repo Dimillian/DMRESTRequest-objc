@@ -66,6 +66,7 @@
     //Using JSON in BODY with private settings, so only for 1 request
     DMRESTSettings *settings = [[DMRESTSettings alloc]initForPrivateSettingsFromSharedSettings];
     [settings setSendJSON:YES];
+    [settings setUserAgent:@"DMRESTRequest/version type/JSON"];
     DMRESTRequest *postRequest = [[DMRESTRequest alloc]initWithMethod:@"POST"
                                                         ressource:@"self"
                                                        parameters:@{@"user": @"dimillian",

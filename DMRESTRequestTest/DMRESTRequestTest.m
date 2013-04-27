@@ -64,6 +64,18 @@
     STAssertNil([[DMRESTSettings sharedSettings]valueForPermanentParameter:@"paramTest"], @"FAILURE");
 }
 
+- (void)testSettingsUserAgent
+{
+    [[DMRESTSettings sharedSettings]setUserAgent:@"test"];
+    STAssertEquals(@"test", [[DMRESTSettings sharedSettings]userAgent], @"FAILURE");
+    STAssertEquals(@"test", [[DMRESTSettings sharedSettings]valueForPermanentHeaderField:@"User-Agent"], @"FAILURE");
+    [[DMRESTSettings sharedSettings]setUserAgent:nil];
+    STAssertNil([[DMRESTSettings sharedSettings]userAgent], @"FAILURE");
+    STAssertFalse([[[DMRESTSettings sharedSettings]valueForPermanentHeaderField:@"User-Agent"]
+                   isEqualToString:@"test"],
+                  @"FAILURE");
+}
+
 - (void)testRequest
 {
     [[DMRESTSettings sharedSettings]setBaseURL:[NSURL URLWithString:@"http://google.com"]];

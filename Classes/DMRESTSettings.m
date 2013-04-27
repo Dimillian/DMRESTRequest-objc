@@ -62,6 +62,7 @@ static DMRESTSettings *sharedSettings;
 
 - (void)setUserAgent:(NSString *)userAgent
 {
+    _userAgent = userAgent;
     [self setPermanentHeaderFieldValue:userAgent forHeaderField:kUserAgent];
 }
 
