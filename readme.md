@@ -68,15 +68,14 @@ You can add permanent parameters such as a Auth Token with the `DMRESTSettings` 
 ## Getting started
 Just add every file of the **classes/** folder to your project.
 
-
-This is a really simple set of classes, ready to use, just import **DMRESTRequest**, and **NSString+TotalEscaping** in your project, import **DMRESTRequest.h**  where you wan to make requests and you're done. 
+This is a really simple set of classes, ready to use, just import **DMRESTRequest** where you wan to make requests and you're done. 
 
 ## Code example
 You will find more detailled examples in the project... 
 
-### using block method
+### using block based methods
 
-	//Block method, short method without using the delegate. 
+	//Block bsed method, short method without using the delegate. 
     DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
                                                             ressource:@"self"
                                                                 parameters:@{@"user": @"Dimillian"}];
@@ -92,13 +91,31 @@ You will find more detailled examples in the project...
             //TODO do something with response
         }
     }];
+    
+    
+`DMRESTRequest` also provide 2 other block based methods
+One which provide a chance to provide HTTP auth credentials
 
+
+	-(void)executeBlockRequest:(void (^)(NSURLResponse *response, NSData *data, NSError *error, BOOL success))handler
+                                    requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock;
+                                    
+It also provide a complexe block based methods which simulate delegate and provide a lot of feedbacks. 
+Useful for tracking progress of a request
+
+	-(void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *response,
+                                                             NSInteger httpStatusCode,
+                                                             float exeptedContentSize))responseBlock
+                             requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock
+                          progressWithReceivedData:(void (^)(NSData *currentData, NSData *newData, float currentSize))progressBlock
+                                   failedWithError:(void(^)(NSError *error))errorBlock
+                                   finishedRequest:(void(^)(NSData *completeData))completionBlock;                                                                      
    
    
 ### using delegate 
 
 	[restRequest setDelegate:self]; 
-    [restRequest executeRequest]; 
+    [restRequest executeRequestWithDelegate]; 
 
 	-(void)requestDidStart
 	{
@@ -143,7 +160,7 @@ Here is a few points you should take into considerations to make this class bett
 3. Create your own JSON parsers and create your own model to match your server implementation and make them works with this class. 
 
 ## Licensing 
-Copyright (C) 2012 by Thomas Ricouard. 
+Copyright (C) 2013 by Thomas Ricouard. 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

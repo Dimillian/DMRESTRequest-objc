@@ -14,7 +14,7 @@ typedef void (^ProgressBlock)(NSData *, NSData *, float);
 typedef void (^ErrorBlock)(NSError *);
 typedef void (^CompletionBlock)(NSData *);
 typedef void (^FullCompletionBlock)(NSURLResponse *, NSData *, NSError *, BOOL);
-typedef DMRESTHTTPAuthLogin *(^HTTPAuthBlock)(void);
+typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
 
 @interface DMRESTRequest ()
 {
@@ -179,7 +179,7 @@ typedef DMRESTHTTPAuthLogin *(^HTTPAuthBlock)(void);
 }
 
 - (void)executeBlockRequest:(void (^)(NSURLResponse *, NSData *, NSError *, BOOL))handler
-      requestAskforHTTPAuth:(DMRESTHTTPAuthLogin *(^)(void))httpAuthBlock
+      requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock
 {
     _fullCompletionBlock = handler;
     _httpAuthBlock = httpAuthBlock;
@@ -188,7 +188,7 @@ typedef DMRESTHTTPAuthLogin *(^HTTPAuthBlock)(void);
 }
 
 - (void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *, NSInteger, float))responseBlock
-                              requestAskforHTTPAuth:(DMRESTHTTPAuthLogin *(^)(void))httpAuthBlock
+                              requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock
                            progressWithReceivedData:(void (^)(NSData *, NSData *, float))progressBlock
                                     failedWithError:(void (^)(NSError *))errorBlock
                                     finishedRequest:(void (^)(NSData *))completionBlock
@@ -300,7 +300,7 @@ typedef DMRESTHTTPAuthLogin *(^HTTPAuthBlock)(void);
 
 -(void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    DMRESTHTTPAuthLogin *auth = _httpAuthBlock;
+    DMRESTHTTPAuthCredential *auth = _httpAuthBlock;
     if (auth.login && auth.password && auth.continueLogin) {
         NSURLCredential *credential = [[NSURLCredential alloc]initWithUser:auth.login
                                                                   password:auth.password
@@ -322,13 +322,13 @@ typedef DMRESTHTTPAuthLogin *(^HTTPAuthBlock)(void);
 
 @end
 
-@interface DMRESTHTTPAuthLogin ()
+@interface DMRESTHTTPAuthCredential ()
 @property (nonatomic, copy, readwrite) NSString *login;
 @property (nonatomic, copy, readwrite) NSString *password;
 @property (nonatomic, readwrite) BOOL continueLogin;
 @end
 
-@implementation DMRESTHTTPAuthLogin
+@implementation DMRESTHTTPAuthCredential
 - (id)initWithLogin:(NSString *)login password:(NSString *)password continueLogin:(BOOL)continueLogin
 {
     self = [super init];

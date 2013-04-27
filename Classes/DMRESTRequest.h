@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "DMRESTSettings.h"
-@class DMRESTHTTPAuthLogin;
+@class DMRESTHTTPAuthCredential;
 @protocol DMRESTRequestDelegate;
 /**
  DMRESTRequest is here to manage REST request easily within your application
@@ -49,7 +49,7 @@
  Also provide a block that let you a chance to provide you own HTTPAUth Credential
  */
 -(void)executeBlockRequest:(void (^)(NSURLResponse *response, NSData *data, NSError *error, BOOL success))handler
-                                    requestAskforHTTPAuth:(DMRESTHTTPAuthLogin *(^)(void))httpAuthBlock;
+                                    requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock;
 
 /**
  Execute a standard request using block, provide different callback as block, it emulate delegate but with block
@@ -62,7 +62,7 @@
 -(void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *response,
                                                              NSInteger httpStatusCode,
                                                              float exeptedContentSize))responseBlock
-                             requestAskforHTTPAuth:(DMRESTHTTPAuthLogin *(^)(void))httpAuthBlock
+                             requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock
                           progressWithReceivedData:(void (^)(NSData *currentData, NSData *newData, float currentSize))progressBlock
                                    failedWithError:(void(^)(NSError *error))errorBlock
                                    finishedRequest:(void(^)(NSData *completeData))completionBlock;
@@ -82,7 +82,7 @@
  DMRESTHTTPAuthLogin is a simple object providing an interface to forward credential when DMRESTRequest 
  ask for them
  */
-@interface DMRESTHTTPAuthLogin : NSObject
+@interface DMRESTHTTPAuthCredential : NSObject
 
 @property (nonatomic, copy, readonly) NSString *login;
 @property (nonatomic, copy, readonly) NSString *password;

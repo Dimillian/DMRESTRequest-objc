@@ -22,11 +22,25 @@
     //Adding some permanent parameter like a AuthToken
     [[DMRESTSettings sharedSettings]setPermananentParameterValue:@"1234" forParameter:@"AuthToken"];
     NSLog(@"%@", [[DMRESTSettings sharedSettings]valueForPermanentParameter:@"AuthToken"]);
-    //usage exemple
+
     
-    //Block method, short method without using the delegate. 
-    DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
-                                                            ressource:@"self"
+    [self simpleBlockRequest];
+    [self complexeBlockRequest];
+    [self privateSettingsBlockRequest];
+    [self httpAuthBlockRequest];
+    [self delegateRequest];
+    
+    
+}
+
+
+- (void)simpleBlockRequest
+{
+    
+    //Block method, short method without using the delegate.
+    //This is the preferred way
+    DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET"
+                                                                 ressource:@"self"
                                                                 parameters:@{@"user": @"Dimillian"}];
     [blockrestRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success){
         if (error || !success) {
@@ -40,18 +54,20 @@
             //TODO do something with response
         }
     }];
-    
-    
+}
+
+- (void)complexeBlockRequest
+{
     //Complexe block usage
+    //Provide more feedback with more detail
     DMRESTRequest *complexeBlockRequest = [[DMRESTRequest alloc]initWithMethod:@"POST"
-                                                                 ressource:@"self"
+                                                                     ressource:@"self"
                                                                     parameters:@{@"user": @"Dimillian", @"query": @"full"}];
     
     [complexeBlockRequest executeDetailedBlockRequestReceivedResponse:^(NSURLResponse *response, NSInteger httpStatusCode, float exeptedContentSize) {
         
-    } requestAskforHTTPAuth:^DMRESTHTTPAuthLogin *{
-        DMRESTHTTPAuthLogin *login = [[DMRESTHTTPAuthLogin alloc]initWithLogin:@"TEST" password:@"TEST" continueLogin:YES];
-        return login;
+    } requestAskforHTTPAuth:^DMRESTHTTPAuthCredential *{
+        return nil;
     } progressWithReceivedData:^(NSData *currentData, NSData *newData, float currentSize) {
         NSLog(@"%f", currentSize);
     } failedWithError:^(NSError *error) {
@@ -63,14 +79,19 @@
         NSLog(@"%@", json);
     }];
     
-    //Using JSON in BODY with private settings, so only for 1 request
+}
+
+
+- (void)privateSettingsBlockRequest
+{
+    //Example with custom setting for this request, send HTTPBody as JSON
     DMRESTSettings *settings = [[DMRESTSettings alloc]initForPrivateSettingsFromSharedSettings];
     [settings setSendJSON:YES];
     [settings setUserAgent:@"DMRESTRequest/version type/JSON"];
     DMRESTRequest *postRequest = [[DMRESTRequest alloc]initWithMethod:@"POST"
-                                                        ressource:@"self"
-                                                       parameters:@{@"user": @"dimillian",
-                              @"movies": [NSNumber numberWithInt:1]}];
+                                                            ressource:@"self"
+                                                           parameters:@{@"user": @"dimillian",
+                                  @"movies": [NSNumber numberWithInt:1]}];
     [postRequest setPrivateCustomSettings:settings];
     [postRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success) {
         if (success) {
@@ -80,9 +101,31 @@
             NSLog(@"%@", json);
         }
     }];
+}
+
+- (void)httpAuthBlockRequest
+{
+    //Other example using simple block method with HTTP auth
+    DMRESTSettings *authSettings = [[DMRESTSettings alloc]initForPrivateSettingsFromSharedSettings];
+    [authSettings setFileExtension:@"txt"];
+    DMRESTRequest *authRequest = [[DMRESTRequest alloc]initWithMethod:@"GE" ressource:@"self_auth" parameters:nil];
+    [authRequest setPrivateCustomSettings:authSettings];
+    [authRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success) {
+        NSLog(@"%@", response);
+        NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+        NSLog(@"%@", json);
+    } requestAskforHTTPAuth:^DMRESTHTTPAuthCredential *{
+        NSLog(@"ASK LOGIn");
+        DMRESTHTTPAuthCredential *login = [[DMRESTHTTPAuthCredential alloc]initWithLogin:@"azerty" password:@"azerty" continueLogin:YES];
+        return login;
+    }];
+}
+
+- (void)delegateRequest
+{
     
     
-    //Other examples with multiple parameters and other properties and using delegate
+    //Other example with multiple parameters and other properties and using delegate
     DMRESTRequest *newRequest = [[DMRESTRequest alloc]initWithMethod:@"POST"
                                                            ressource:@"users"
                                                           parameters:
@@ -94,8 +137,6 @@
     privateSettings.sendJSON = YES;
     [newRequest setDelegate:self];
     [newRequest executeRequestWithDelegate];
-    
-    
 }
 
 - (void)viewDidUnload
