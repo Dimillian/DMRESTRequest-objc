@@ -32,8 +32,8 @@
                         privateSharedSetting.baseURL.absoluteString,
                          @"FAILURE: Base URL should be equal shared settings one");
     DMRESTSettings *privateprivateSettings = [[DMRESTSettings alloc]initForPrivateSettingsWithBaseURL:
-                                              [NSURL URLWithString:@"http://helloworld.com"]
-                                                                                        fileExtension:@"xml"];
+                                              [NSURL URLWithString:@"http://helloworld.com"]];
+    [privateprivateSettings setFileExtension:@"xml"];
     STAssertEqualObjects(@"http://helloworld.com",
                          privateprivateSettings.baseURL.absoluteString,
                          @"FAILURE: base URL not equal");

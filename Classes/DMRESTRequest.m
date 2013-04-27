@@ -68,15 +68,21 @@ typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
 -(NSMutableURLRequest *)constructRequest
 {
     NSAssert(self.inUseSettings.baseURL, @"You must set a baseURL");
-    NSAssert(self.inUseSettings.fileExtension, @"You must set a fileExtension");
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setTimeoutInterval:self.inUseSettings.customTimemout];
-    if ([_method isEqualToString:@"GET"]) { 
+    if ([_method isEqualToString:@"GET"]) {
+        NSString *fileExt;
+        if (self.inUseSettings.fileExtension) {
+            fileExt = self.inUseSettings.fileExtension;
+        }
+        else{
+            fileExt = @"";
+        }
         [request setURL:[NSURL URLWithString:
                          [NSString stringWithFormat:@"%@/%@.%@?%@",
                           self.inUseSettings.baseURL.absoluteString,
                           _ressource,
-                          self.inUseSettings.fileExtension,
+                          fileExt,
                           [self constructParametersString]]]];
     }
     else {
@@ -300,7 +306,7 @@ typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
 
 -(void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    DMRESTHTTPAuthCredential *auth = _httpAuthBlock;
+    DMRESTHTTPAuthCredential *auth = _httpAuthBlock();
     if (auth.login && auth.password && auth.continueLogin) {
         NSURLCredential *credential = [[NSURLCredential alloc]initWithUser:auth.login
                                                                   password:auth.password

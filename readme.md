@@ -27,7 +27,7 @@ This is not a framework nor a complete solution like RESTKit is.
 ###DMRESTSettings
 `DMRESTSettings` manage settings shared between your `DMRESTRequest` instances.
 You set them once (before any request) and then they are used for every other requests.
-The minimum to set is the `baseURL` and `fileExtension`. 
+The minimum to set is the `baseURL`
 You set them like this
 
 	[[DMRESTSettings sharedSettings]setBaseURL:[NSURL URLWithString:@"https://api.virtual-info.info/"]];
@@ -36,8 +36,7 @@ You set them like this
 You can also set an instance of `DMRESTSettings` for a specific requests, so you can prevent this requests to use the shared settings
 Take a look at the initializer of `DMRESTSettings`
 	
-	-(id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL
-                         fileExtension:(NSString *)fileExtension;
+	-(id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL;
                          
                     
 And then set it to the property `privateCustomSettings` of `DMRESTRequest`.
@@ -66,7 +65,7 @@ You can add permanent parameters such as a Auth Token with the `DMRESTSettings` 
 `- (void)setPermananentParameterValue:(id)value forParameter:(NSString *)parameter;`
 
 ## Getting started
-Just add every file of the **classes/** folder to your project.
+Just add every files of the **classes/** folder to your project.
 
 This is a really simple set of classes, ready to use, just import **DMRESTRequest** where you wan to make requests and you're done. 
 

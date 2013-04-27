@@ -106,9 +106,9 @@
 - (void)httpAuthBlockRequest
 {
     //Other example using simple block method with HTTP auth
-    DMRESTSettings *authSettings = [[DMRESTSettings alloc]initForPrivateSettingsFromSharedSettings];
-    [authSettings setFileExtension:@"txt"];
-    DMRESTRequest *authRequest = [[DMRESTRequest alloc]initWithMethod:@"GE" ressource:@"self_auth" parameters:nil];
+    DMRESTSettings *authSettings = [[DMRESTSettings alloc]initForPrivateSettingsWithBaseURL:
+                                    [NSURL URLWithString:@"http://auth.api.virtual-info.info/"]];
+    DMRESTRequest *authRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" ressource:@"" parameters:nil];
     [authRequest setPrivateCustomSettings:authSettings];
     [authRequest executeBlockRequest:^(NSURLResponse *response, NSData *data, NSError *error, BOOL success) {
         NSLog(@"%@", response);
@@ -131,8 +131,8 @@
                                                           parameters:
                                  [NSDictionary dictionaryWithObjectsAndKeys:@"13", @"userId", @"Dimillian", @"username", nil]];
     DMRESTSettings *privateSettings = [[DMRESTSettings alloc]initForPrivateSettingsWithBaseURL:
-                                       [NSURL URLWithString:@"http://google.com"]
-                                                                                 fileExtension:@"json"];
+                                       [NSURL URLWithString:@"http://google.com"]];
+    [privateSettings setFileExtension:@"json"];
     privateSettings.customTimemout = 40;
     privateSettings.sendJSON = YES;
     [newRequest setDelegate:self];

@@ -36,13 +36,13 @@ static DMRESTSettings *sharedSettings;
     return sharedSettings;
 }
 
-- (id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL fileExtension:(NSString *)fileExtension
+- (id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL
 {
     self = [super init];
     if (self) {
         _permanentHTTPHeaderFields = [[NSMutableDictionary alloc]init];
         _baseURL = baseURL;
-        _fileExtension = fileExtension;
+        _fileExtension = @"";
         _sendJSON = NO;
         _escaping = NO;
         _customTimemout = 60;

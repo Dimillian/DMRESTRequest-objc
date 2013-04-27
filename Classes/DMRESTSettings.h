@@ -11,7 +11,7 @@
 /**
  DMRESTSettings define the settings shared between your DMRESTRequest instances
  Some properties are required some other not
- Your must set baseURL and fileExtension before executing any request
+ Your must set baseURL before executing any request
  */
 @interface DMRESTSettings : NSObject
 
@@ -27,8 +27,7 @@
  It will prevent it to use the shared settings but use the passed settings instead
  Will not copy current shared settings when created
  */
--(id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL
-                         fileExtension:(NSString *)fileExtension;
+-(id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL;
 /**
  Initiliazer if you want to create private settings for a specific DMRESTRequest
  Will copy current shared settings when created
@@ -41,6 +40,7 @@
 @property (nonatomic, strong) NSURL *baseURL;
 /**
  the file extension of your endpoint (.json, .xml, .php etc...)
+ Appended at the end of your ressource if you set one.
  */
 @property (nonatomic, copy) NSString *fileExtension;
 
