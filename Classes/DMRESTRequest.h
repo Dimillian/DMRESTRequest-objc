@@ -8,17 +8,19 @@
 
 #import <Foundation/Foundation.h>
 #import "DMRESTSettings.h"
-
+@class DMRESTHTTPAuthLogin;
 @protocol DMRESTRequestDelegate;
 /**
  DMRESTRequest is here to manage REST request easily within your application
  */
 @interface DMRESTRequest : NSObject <NSURLConnectionDelegate>
+
 /**
  The delegate, provide various feedback when you adopt the protocol and set the delegate
  You don't need it if you only use block methods
  */
 @property (nonatomic, weak) id<DMRESTRequestDelegate> delegate;
+
 
 /**
  Set this property to use the passed settings instead of the shared settings
@@ -37,56 +39,68 @@
           ressource:(NSString *)ressource 
          parameters:(NSDictionary *)parameters;
 
-
-/**
- Init a new DMRESTRequest with HTTP basic auth configuration
- @param user The username for the HTTP auth credential
- @param password The password for the HTTP auth credential
- @param endPoint The full endpoint for the HTTP basic auth request 
- @return A new initialized object
- */
--(id)initForhHTTPAuthWithUser:(NSString *)user
-                     password:(NSString *)password
-                 authEndPoint:(NSString *)endPoint; 
-
-/**
- Should be called when you want to execute the HTTP auth request from a properly initialized DMRESTRequest object
- Provide request feedback and status through delegate, you need to implement them for HTTP basic auth as there is no 
- block option
- */
--(void)executeHTTPAuthRequest;  
-
-/**
- Execute standard request and provide feedback through delegate methods that you need to implement when executing the request
- with this method
- Might be deprecated in the future as the full block method might replace this one
- */
--(void)executeRequest;
-
 /**
  Execute a standard request using block, provide inline response, data and error
- Please note that you may have less information and precise progress status when using block, but far more convenient 
- than implementing a bunch of delegate method
  */
 -(void)executeBlockRequest:(void (^)(NSURLResponse *response, NSData *data, NSError *error, BOOL success))handler;
 
 /**
+ Execute a standard request using block, provide inline response, data and error
+ Also provide a block that let you a chance to provide you own HTTPAUth Credential
+ */
+-(void)executeBlockRequest:(void (^)(NSURLResponse *response, NSData *data, NSError *error, BOOL success))handler
+                                    requestAskforHTTPAuth:(DMRESTHTTPAuthLogin *(^)(void))httpAuthBlock;
+
+/**
  Execute a standard request using block, provide different callback as block, it emulate delegate but with block
  responseBlock: Called first, contain the response, http status code and exepted content size
+ httpAuthBlock: Called when the request need credential for HTTP auth, you can return nil
  progressBlock: Called multiple time during the request, provide the data downloaded so far and the % of progression
  errorBlock: Called when the request fail with an error
  completionBlock: Called once the request is done, provide complete data
  */
--(void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *response, NSInteger httpStatusCode, float exeptedContentSize))responseBlock
-                          progressWithReceivedData:(void (^)(NSData *data, float progress))progressBlock
+-(void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *response,
+                                                             NSInteger httpStatusCode,
+                                                             float exeptedContentSize))responseBlock
+                             requestAskforHTTPAuth:(DMRESTHTTPAuthLogin *(^)(void))httpAuthBlock
+                          progressWithReceivedData:(void (^)(NSData *currentData, NSData *newData, float currentSize))progressBlock
                                    failedWithError:(void(^)(NSError *error))errorBlock
                                    finishedRequest:(void(^)(NSData *completeData))completionBlock;
+
+/**
+ Execute the request using delegate, you must set the delegate before calling this method
+ */
+-(void)executeRequestWithDelegate;
 
 /**
  Cancel the current request
  */
 -(void)cancelRequest; 
 @end
+
+/**
+ DMRESTHTTPAuthLogin is a simple object providing an interface to forward credential when DMRESTRequest 
+ ask for them
+ */
+@interface DMRESTHTTPAuthLogin : NSObject
+
+@property (nonatomic, copy, readonly) NSString *login;
+@property (nonatomic, copy, readonly) NSString *password;
+@property (nonatomic, readonly) BOOL continueLogin;
+
+/**
+ Init a new DMRESTHTTPAuthLogin
+ @param user The username for the HTTP auth credential
+ @param password The password for the HTTP auth credential
+ @param login should login or not, set YES if you want to relaunch the DMRESTRequest and login with pssed
+ credential
+ @return A new initialized object
+ */
+- (id)initWithLogin:(NSString *)login
+           password:(NSString *)password
+      continueLogin:(BOOL)continueLogin;
+@end
+
 
 /**
  The protocol you should conform and implement if you want to use the delegate feedback of DMRESTRequest
@@ -102,34 +116,30 @@
  Called as soon as the request finished loading with a JSON response
  @param json A NSJSONSerialization initialized object containing the request response
  */
--(void)requestDidFinishWithJSON:(NSJSONSerialization *)json; 
+-(void)requestDidFinishWithJSON:(NSJSONSerialization *)json;
 
 /**
  Called when the request fail with en error
  @param error The error contaning the code and description
  */
--(void)requestDidFailWithError:(NSError *)error; 
+-(void)requestDidFailWithError:(NSError *)error;
 @optional
 /**
  Called when the request have the HTTP status code
  @param status The HTTP status code returned by the server
  */
--(void)requestDidRespondWithHTTPStatus:(NSInteger)status; 
+-(void)requestDidRespondWithHTTPStatus:(NSInteger)status;
 
 /**
  Called when the request finish loading with data, use this when you don't want JSON but the actual non formatted data
  returned by the server
- @param data The data returned by the server. 
+ @param data The data returned by the server.
  */
--(void)requestDidFinishWithData:(NSMutableData *)data; 
+-(void)requestDidFinishWithData:(NSMutableData *)data;
 
 /**
  Called when the request fail because no active internet connection is present on the device
  */
--(void)requestDidFailBecauseNoActiveConnection; 
+-(void)requestDidFailBecauseNoActiveConnection;
 
-/**
- Called when the request fail because the credentials provided for the basic HTTP auth was wrong
- */
--(void)requestCredentialIncorrectForHTTPAuth; 
 @end

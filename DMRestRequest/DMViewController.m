@@ -43,24 +43,24 @@
     
     
     //Complexe block usage
-    DMRESTRequest *complexeBlockRequest = [[DMRESTRequest alloc]initWithMethod:@"GET"
+    DMRESTRequest *complexeBlockRequest = [[DMRESTRequest alloc]initWithMethod:@"POST"
                                                                  ressource:@"self"
-                                                                    parameters:@{@"user": @"Dimillian"}];
-    [complexeBlockRequest
-     executeDetailedBlockRequestReceivedResponse:^(NSURLResponse *response, NSInteger httpStatusCode, float exeptedContentSize) {
-         NSLog(@"Size: %f", exeptedContentSize);
-         NSLog(@"HTTP Status: %d", httpStatusCode);
+                                                                    parameters:@{@"user": @"Dimillian", @"query": @"full"}];
+    
+    [complexeBlockRequest executeDetailedBlockRequestReceivedResponse:^(NSURLResponse *response, NSInteger httpStatusCode, float exeptedContentSize) {
         
-    } progressWithReceivedData:^(NSData *data, float progress) {
-        NSLog(@"Progress: %f", progress);
-        
+    } requestAskforHTTPAuth:^DMRESTHTTPAuthLogin *{
+        DMRESTHTTPAuthLogin *login = [[DMRESTHTTPAuthLogin alloc]initWithLogin:@"TEST" password:@"TEST" continueLogin:YES];
+        return login;
+    } progressWithReceivedData:^(NSData *currentData, NSData *newData, float currentSize) {
+        NSLog(@"%f", currentSize);
     } failedWithError:^(NSError *error) {
-        
+        NSLog(@"%@", error);
     } finishedRequest:^(NSData *completeData) {
         NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:completeData
                                                                     options:NSJSONReadingAllowFragments
                                                                       error:nil];
-        NSLog(@"Complexe block: %@", json);
+        NSLog(@"%@", json);
     }];
     
     //Using JSON in BODY with private settings, so only for 1 request
@@ -81,71 +81,21 @@
         }
     }];
     
-    //Using delegate
-    //you should cancel the previous request before launching a new one if referenced as a class variable.
-    [restRequest cancelRequest]; 
     
-    restRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
-                                             ressource:@"users"
-                                            parameters:
-                   [NSDictionary dictionaryWithObject:@"Dimillian" forKey:@"user"]];
-    [restRequest setDelegate:self];
-    [restRequest executeRequest]; 
-    
-    //Other examples with multiple parameters and other properties
-    DMRESTRequest *newRequest = [[DMRESTRequest alloc]initWithMethod:@"POST" 
-                                                                 ressource:@"users"
-                                                                parameters:
+    //Other examples with multiple parameters and other properties and using delegate
+    DMRESTRequest *newRequest = [[DMRESTRequest alloc]initWithMethod:@"POST"
+                                                           ressource:@"users"
+                                                          parameters:
                                  [NSDictionary dictionaryWithObjectsAndKeys:@"13", @"userId", @"Dimillian", @"username", nil]];
     DMRESTSettings *privateSettings = [[DMRESTSettings alloc]initForPrivateSettingsWithBaseURL:
                                        [NSURL URLWithString:@"http://google.com"]
                                                                                  fileExtension:@"json"];
     privateSettings.customTimemout = 40;
     privateSettings.sendJSON = YES;
-    [newRequest executeRequest]; 
-    [newRequest cancelRequest]; 
+    [newRequest setDelegate:self];
+    [newRequest executeRequestWithDelegate];
     
-}
-
-#pragma mark - DMRestRequest delegate
-
--(void)requestDidStart
-{
-    //The request just started, you should start your loading screen or something
-}
-
--(void)requestDidRespondWithHTTPStatus:(NSInteger)status
-{
-    //Useful if you rely on HTTP status code on your client to do some opérations. 
-    //This delegate will be called first after requestDidStart.
     
-    //ie if(status==200) OK
-}
-
--(void)requestDidFinishWithJSON:(NSJSONSerialization *)json
-{
-    //Request is finished with success and you have the full JSON response from your server. 
-    //The response can be an NSDictionnary or an NSArray (mutable). 
-    
-    //ie: NSDictionary *jsonDic = (NSDictionary*)json; 
-    
-    //This is where you can parse it into your model object and start doing some crazy shit
-}
-
--(void)requestDidFailWithError:(NSError *)error
-{
-    //Request did fail with an error, check the error to know why and refresh your UI. 
-}
-
--(void)requestDidFailBecauseNoActiveConnection
-{
-    //No active connection detected
-    //you should display en error message
-}
-
--(void)requestCredentialIncorrectForHTTPAuth
-{
-    //Crendential provided incorect
 }
 
 - (void)viewDidUnload
@@ -159,4 +109,49 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+
+#pragma mark - DMRestRequest delegate
+
+-(void)requestDidStart
+{
+    NSLog(@"START");
+    //The request just started, you should start your loading screen or something
+}
+
+-(void)requestDidRespondWithHTTPStatus:(NSInteger)status
+{
+    NSLog(@"STATUS %d", status);
+    //Useful if you rely on HTTP status code on your client to do some opérations.
+    //This delegate will be called first after requestDidStart.
+    
+    //ie if(status==200) OK
+}
+
+-(void)requestDidFinishWithJSON:(NSJSONSerialization *)json
+{
+
+    NSLog(@"JSON %@", json);
+    //Request is finished with success and you have the full JSON response from your server.
+    //The response can be an NSDictionnary or an NSArray (mutable).
+    
+    //ie: NSDictionary *jsonDic = (NSDictionary*)json;
+    
+    //This is where you can parse it into your model object and start doing some crazy shit
+}
+
+-(void)requestDidFailWithError:(NSError *)error
+{
+    //Request did fail with an error, check the error to know why and refresh your UI.
+}
+
+-(void)requestDidFailBecauseNoActiveConnection
+{
+    //No active connection detected
+    //you should display en error message
+}
+
+-(void)requestCredentialIncorrectForHTTPAuth
+{
+    //Crendential provided incorect
+}
 @end

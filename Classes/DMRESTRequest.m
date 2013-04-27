@@ -10,28 +10,29 @@
 #import "NSString+TotalEscaping.h"
 
 typedef void (^ResponseBlock)(NSURLResponse *, NSInteger, float);
-typedef void (^ProgressBlock)(NSData *, float);
+typedef void (^ProgressBlock)(NSData *, NSData *, float);
 typedef void (^ErrorBlock)(NSError *);
 typedef void (^CompletionBlock)(NSData *);
+typedef void (^FullCompletionBlock)(NSURLResponse *, NSData *, NSError *, BOOL);
+typedef DMRESTHTTPAuthLogin *(^HTTPAuthBlock)(void);
 
 @interface DMRESTRequest ()
 {
     NSMutableData *_responseData;
     NSURLConnection *_connection;
-    
-    NSString *_user;
-    NSString *_password;
-    NSString *_authEndPoint;
-    BOOL _alreadyTried;
-    
+    NSURLResponse *_urlResponse;
+    NSError *_error;
+    BOOL _success;
     float _contentSize;
-    
-    
+    float _currentSize;
 }
 @property (nonatomic, copy) ResponseBlock responseBlock;
 @property (nonatomic, copy) ProgressBlock progressBlock;
 @property (nonatomic, copy) ErrorBlock errorBlock;
 @property (nonatomic, copy) CompletionBlock completionBlock;
+@property (nonatomic, copy) HTTPAuthBlock httpAuthBlock;
+@property (nonatomic, copy) FullCompletionBlock fullCompletionBlock;
+
 @property (nonatomic, readonly) DMRESTSettings *inUseSettings;
 @property (nonatomic, strong) NSString *method;
 @property (nonatomic, strong) NSString *ressource;
@@ -39,7 +40,6 @@ typedef void (^CompletionBlock)(NSData *);
 @end
 
 @implementation DMRESTRequest
-@synthesize delegate = _delegate;
 
 -(id)initWithMethod:(NSString *)method  
           ressource:(NSString *)ressource 
@@ -49,7 +49,9 @@ typedef void (^CompletionBlock)(NSData *);
     if (self) {
         _method = method; 
         _ressource = ressource; 
-        _parameters = parameters; 
+        _parameters = parameters;
+        _contentSize = 0;
+        _currentSize = 0;
     }
     return self; 
 }
@@ -160,17 +162,6 @@ typedef void (^CompletionBlock)(NSData *);
                                              error:&error]; 
 }
 
--(void)executeRequest
-{   
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES; 
-    _connection = [[NSURLConnection alloc] initWithRequest:[self constructRequest] delegate:self];
-    if (_connection) {
-        _responseData = [[NSMutableData alloc] init];
-        [self.delegate requestDidStart];
-    }
-    
-}
-
 -(void)executeBlockRequest:(void (^)(NSURLResponse *, NSData *, NSError *, BOOL))handler
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES; 
@@ -184,11 +175,21 @@ typedef void (^CompletionBlock)(NSData *);
                                else{
                                    handler(res, data, error, YES);
                                }
-                           }]; 
+                           }];
+}
+
+- (void)executeBlockRequest:(void (^)(NSURLResponse *, NSData *, NSError *, BOOL))handler
+      requestAskforHTTPAuth:(DMRESTHTTPAuthLogin *(^)(void))httpAuthBlock
+{
+    _fullCompletionBlock = handler;
+    _httpAuthBlock = httpAuthBlock;
+    _responseData = [[NSMutableData alloc] init];
+    _connection = [[NSURLConnection alloc] initWithRequest:[self constructRequest] delegate:self];
 }
 
 - (void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *, NSInteger, float))responseBlock
-                           progressWithReceivedData:(void (^)(NSData *, float))progressBlock
+                              requestAskforHTTPAuth:(DMRESTHTTPAuthLogin *(^)(void))httpAuthBlock
+                           progressWithReceivedData:(void (^)(NSData *, NSData *, float))progressBlock
                                     failedWithError:(void (^)(NSError *))errorBlock
                                     finishedRequest:(void (^)(NSData *))completionBlock
 {
@@ -196,12 +197,19 @@ typedef void (^CompletionBlock)(NSData *);
     _errorBlock = errorBlock;
     _responseBlock = responseBlock;
     _progressBlock = progressBlock;
+    _httpAuthBlock = httpAuthBlock;
+    _responseData = [[NSMutableData alloc] init];
+    _connection = [[NSURLConnection alloc] initWithRequest:[self constructRequest] delegate:self];
+}
+
+- (void)executeRequestWithDelegate
+{
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     _connection = [[NSURLConnection alloc] initWithRequest:[self constructRequest] delegate:self];
     if (_connection) {
         _responseData = [[NSMutableData alloc] init];
         [self.delegate requestDidStart];
     }
-
 }
 
 -(void)cancelRequest
@@ -214,68 +222,73 @@ typedef void (^CompletionBlock)(NSData *);
     _errorBlock = nil;
     _progressBlock = nil;
     _responseBlock = nil;
+    _fullCompletionBlock = nil;
+    _currentSize = 0;
+    _contentSize = 0;
 }
 
 
 #pragma mark - NSURLConnection Delegate
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	[_responseData setLength:0];
-    
+    _urlResponse = response;
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     NSInteger responseStatusCode = [httpResponse statusCode];
     if (_responseBlock) {
         _contentSize = (float)[response expectedContentLength];
+        _currentSize = 0;
         _responseBlock(response, responseStatusCode, _contentSize);
     }
     if ([self.delegate respondsToSelector:@selector(requestDidRespondWithHTTPStatus:)]) {
         [self.delegate requestDidRespondWithHTTPStatus:responseStatusCode];
     }
-    
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     [_responseData appendData:data];
     if (_progressBlock) {
-        float progress = ((float) [_responseData length] / _contentSize);
-        _progressBlock(_responseData, progress);
+        _currentSize += [data length];
+        _progressBlock(_responseData, data, _currentSize);
     }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-	if ([error code] == -1009) {
+    if ([error code] == -1009) {
         if ([self.delegate respondsToSelector:@selector(requestDidFailBecauseNoActiveConnection)]) {
             [self.delegate requestDidFailBecauseNoActiveConnection];
         }
     }
+    if ([self.delegate respondsToSelector:@selector(requestDidFailWithError:)]) {
+        [self.delegate requestDidFailWithError:error];
+    }
     if (_errorBlock) {
         _errorBlock(error);
     }
-    [self.delegate requestDidFailWithError:error];
+    _error = error;
+    _success = NO;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	
+    
+	_success = YES;
     if(_completionBlock){
         _completionBlock(_responseData);
+    }
+    if (_fullCompletionBlock) {
+        _fullCompletionBlock(_urlResponse, _responseData, _error, _success);
     }
     
     if ([self.delegate respondsToSelector:@selector(requestDidFinishWithData:)]) {
         [self.delegate requestDidFinishWithData:_responseData];
     }
     
-    NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:_responseData 
-                                                                options:NSJSONReadingAllowFragments 
-                                                                  error:nil];
-    
-    [self.delegate requestDidFinishWithJSON:json];
-    
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults]; 
-    //Bonus: Show response on iOS in an alert if setting key is ON ! Cool for debugging a server right from you app.
-    if ([userDefault boolForKey:@"DEBUGMESSAGE"]) {
-        NSString *responseString = [[NSString alloc]initWithData:_responseData encoding:NSUTF8StringEncoding]; 
-        UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"DEBUG" message:responseString delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil]; 
-        [alertView show];    
+    if ([self.delegate respondsToSelector:@selector(requestDidFinishWithJSON:)]) {
+        NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:_responseData
+                                                                    options:NSJSONReadingAllowFragments
+                                                                      error:nil];
+        
+        [self.delegate requestDidFinishWithJSON:json];
     }
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
     
@@ -285,43 +298,21 @@ typedef void (^CompletionBlock)(NSData *);
 #pragma mark - HTTP auth
 
 
--(id)initForhHTTPAuthWithUser:(NSString *)user password:(NSString *)password authEndPoint:(NSString *)endPoint
-{
-    self = [super init]; 
-    if (self) {
-        _user = user; 
-        _password = password; 
-        _authEndPoint = endPoint; 
-    }
-    
-    return self; 
-}
-
--(void)executeHTTPAuthRequest{
-    
-    _alreadyTried = NO; 
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_authEndPoint]];
-    _connection = [[NSURLConnection alloc]initWithRequest:urlRequest delegate:self]; 
-    if (_connection) {
-        _responseData = [[NSMutableData alloc] init];
-        [self.delegate requestDidStart];
-    }
-}
-
 -(void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
-    if (_user && _password && !_alreadyTried) {
-        NSURLCredential *credential = [[NSURLCredential alloc]initWithUser:_user 
-                                                                  password:_password 
+    DMRESTHTTPAuthLogin *auth = _httpAuthBlock;
+    if (auth.login && auth.password && auth.continueLogin) {
+        NSURLCredential *credential = [[NSURLCredential alloc]initWithUser:auth.login
+                                                                  password:auth.password
                                                                persistence:NSURLCredentialPersistenceForSession];
         
         [[challenge sender]useCredential:credential forAuthenticationChallenge:challenge]; 
-        _alreadyTried = YES; 
     }
-    else {
-        [[challenge sender]cancelAuthenticationChallenge:challenge]; 
-        [self.delegate requestCredentialIncorrectForHTTPAuth]; 
-    }    
+    else if (!auth.continueLogin){
+        [[challenge sender]cancelAuthenticationChallenge:challenge];
+        [self cancelRequest];
+        _fullCompletionBlock(_urlResponse, nil, _error, NO);
+    }
 }
 
 - (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection
@@ -329,6 +320,24 @@ typedef void (^CompletionBlock)(NSData *);
     return NO; 
 }
 
+@end
 
+@interface DMRESTHTTPAuthLogin ()
+@property (nonatomic, copy, readwrite) NSString *login;
+@property (nonatomic, copy, readwrite) NSString *password;
+@property (nonatomic, readwrite) BOOL continueLogin;
+@end
+
+@implementation DMRESTHTTPAuthLogin
+- (id)initWithLogin:(NSString *)login password:(NSString *)password continueLogin:(BOOL)continueLogin
+{
+    self = [super init];
+    if (self) {
+        _login = login;
+        _password = password;
+        _continueLogin = continueLogin;
+    }
+    return self;
+}
 
 @end
