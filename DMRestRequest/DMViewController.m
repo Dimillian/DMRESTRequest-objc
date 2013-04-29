@@ -64,12 +64,12 @@
                                                                      ressource:@"self"
                                                                     parameters:@{@"user": @"Dimillian", @"query": @"full"}];
     
-    [complexeBlockRequest executeDetailedBlockRequestReceivedResponse:^(NSURLResponse *response, NSInteger httpStatusCode, float exeptedContentSize) {
+    [complexeBlockRequest executeDetailedBlockRequestReceivedResponse:^(NSURLResponse *response, NSInteger httpStatusCode, long long exeptedContentSize) {
         
     } requestAskforHTTPAuth:^DMRESTHTTPAuthCredential *{
         return nil;
-    } progressWithReceivedData:^(NSData *currentData, NSData *newData, float currentSize) {
-        NSLog(@"%f", currentSize);
+    } progressWithReceivedData:^(NSData *currentData, NSData *newData, NSUInteger currentSize) {
+        NSLog(@"%lu", (unsigned long)currentSize);
     } failedWithError:^(NSError *error) {
         NSLog(@"%@", error);
     } finishedRequest:^(NSData *completeData) {

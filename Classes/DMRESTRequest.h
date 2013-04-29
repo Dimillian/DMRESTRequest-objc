@@ -60,9 +60,9 @@
  */
 -(void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *response,
                                                              NSInteger httpStatusCode,
-                                                             float exeptedContentSize))responseBlock
+                                                             long long exeptedContentSize))responseBlock
                              requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock
-                          progressWithReceivedData:(void (^)(NSData *currentData, NSData *newData, float currentSize))progressBlock
+                          progressWithReceivedData:(void (^)(NSData *currentData, NSData *newData, NSUInteger currentLength))progressBlock
                                    failedWithError:(void(^)(NSError *error))errorBlock
                                    finishedRequest:(void(^)(NSData *completeData))completionBlock;
 

@@ -8,8 +8,8 @@
 #import "DMRESTRequest.h"
 #import "NSString+TotalEscaping.h"
 
-typedef void (^ResponseBlock)(NSURLResponse *, NSInteger, float);
-typedef void (^ProgressBlock)(NSData *, NSData *, float);
+typedef void (^ResponseBlock)(NSURLResponse *, NSInteger, long long);
+typedef void (^ProgressBlock)(NSData *, NSData *, NSUInteger);
 typedef void (^ErrorBlock)(NSError *);
 typedef void (^CompletionBlock)(NSData *);
 typedef void (^FullCompletionBlock)(NSURLResponse *, NSData *, NSError *, BOOL);
@@ -22,8 +22,8 @@ typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
     NSURLResponse *_urlResponse;
     NSError *_error;
     BOOL _success;
-    float _contentSize;
-    float _currentSize;
+    long long _contentSize;
+    NSUInteger _currentSize;
 }
 @property (nonatomic, copy) ResponseBlock responseBlock;
 @property (nonatomic, copy) ProgressBlock progressBlock;
@@ -192,9 +192,9 @@ typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
     _connection = [[NSURLConnection alloc] initWithRequest:[self constructRequest] delegate:self];
 }
 
-- (void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *, NSInteger, float))responseBlock
+- (void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *, NSInteger, long long))responseBlock
                               requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock
-                           progressWithReceivedData:(void (^)(NSData *, NSData *, float))progressBlock
+                           progressWithReceivedData:(void (^)(NSData *, NSData *, NSUInteger))progressBlock
                                     failedWithError:(void (^)(NSError *))errorBlock
                                     finishedRequest:(void (^)(NSData *))completionBlock
 {
@@ -240,7 +240,7 @@ typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
     NSInteger responseStatusCode = [httpResponse statusCode];
     if (_responseBlock) {
-        _contentSize = (float)[response expectedContentLength];
+        _contentSize = [response expectedContentLength];
         _currentSize = 0;
         _responseBlock(response, responseStatusCode, _contentSize);
     }
