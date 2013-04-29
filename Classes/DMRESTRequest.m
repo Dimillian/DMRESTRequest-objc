@@ -289,11 +289,13 @@ typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
     }
     
     if ([self.delegate respondsToSelector:@selector(requestDidFinishWithJSON:)]) {
+        NSError *jsonError;
         NSJSONSerialization *json = [NSJSONSerialization JSONObjectWithData:_responseData
                                                                     options:NSJSONReadingAllowFragments
-                                                                      error:nil];
-        
-        [self.delegate requestDidFinishWithJSON:json];
+                                                                      error:&jsonError];
+        if (!jsonError && json) {
+            [self.delegate requestDidFinishWithJSON:json];
+        }
     }
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
     
