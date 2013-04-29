@@ -29,7 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		9F0322D7172BE5A500521369 /* PBXContainerItemProxy */ = {
+		53F6F6FF172E693200436D03 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9F59A2AD1529A092003D6047 /* Project object */;
 			proxyType = 1;
@@ -224,7 +224,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				9F0322D8172BE5A500521369 /* PBXTargetDependency */,
+				53F6F700172E693200436D03 /* PBXTargetDependency */,
 			);
 			name = DMRestRequest;
 			productName = DMRestRequest;
@@ -321,10 +321,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		9F0322D8172BE5A500521369 /* PBXTargetDependency */ = {
+		53F6F700172E693200436D03 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9F0322C5172BE39800521369 /* DMRESTRequestTest */;
-			targetProxy = 9F0322D7172BE5A500521369 /* PBXContainerItemProxy */;
+			targetProxy = 53F6F6FF172E693200436D03 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -492,6 +492,7 @@
 				9F0322D6172BE39800521369 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9F59A2B01529A092003D6047 /* Build configuration list for PBXProject "DMRestRequest" */ = {
 			isa = XCConfigurationList;

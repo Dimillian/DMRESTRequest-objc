@@ -27,26 +27,29 @@ static DMRESTSettings *sharedSettings;
 {
     if (sharedSettings == nil) {
         sharedSettings = [[DMRESTSettings alloc]init];
-        sharedSettings.permanentHTTPHeaderFields = [[NSMutableDictionary alloc]init];
-        sharedSettings.sendJSON = NO;
-        sharedSettings.escaping = NO;
-        sharedSettings.customTimemout = 60;
-        [sharedSettings setPermanentHeaderFieldValue:kDefaultHeaderValue forHeaderField:kHeaderFieldContentType];
     }
     return sharedSettings;
 }
 
-- (id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL
+- (id)init
 {
     self = [super init];
     if (self) {
         _permanentHTTPHeaderFields = [[NSMutableDictionary alloc]init];
-        _baseURL = baseURL;
         _fileExtension = @"";
         _sendJSON = NO;
         _escaping = NO;
         _customTimemout = 60;
         [self setPermanentHeaderFieldValue:kDefaultHeaderValue forHeaderField:kHeaderFieldContentType];
+    }
+    return self;
+}
+
+- (id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL
+{
+    self = [self init];
+    if (self) {
+        _baseURL = baseURL;
     }
     return self;
 }
