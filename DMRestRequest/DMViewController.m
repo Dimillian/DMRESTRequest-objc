@@ -68,7 +68,7 @@
         
     } requestAskforHTTPAuth:^DMRESTHTTPAuthCredential *{
         return nil;
-    } progressWithReceivedData:^(NSData *currentData, NSData *newData, NSUInteger currentSize) {
+    } progressWithReceivedData:^(NSMutableData *currentData, NSData *newData, NSUInteger currentSize) {
         NSLog(@"%lu", (unsigned long)currentSize);
     } failedWithError:^(NSError *error) {
         NSLog(@"%@", error);

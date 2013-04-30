@@ -12,8 +12,8 @@
 
 
 typedef void (^ResponseBlock)(NSURLResponse *, NSInteger, long long);
-typedef void (^ProgressBlock)(NSData *, NSData *, NSUInteger);
-typedef void (^ErrorBlock)(NSError *);
+typedef void (^ProgressBlock)(NSMutableData *, NSData *, NSUInteger);
+typedef void (^ConnectionErrorBlock)(NSError *);
 typedef void (^CompletionBlock)(NSData *);
 typedef void (^FullCompletionBlock)(NSURLResponse *, NSData *, NSError *, BOOL);
 typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
@@ -70,7 +70,7 @@ typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
 -(void)executeDetailedBlockRequestReceivedResponse:(ResponseBlock)responseBlock
                              requestAskforHTTPAuth:(HTTPAuthBlock)httpAuthBlock
                           progressWithReceivedData:(ProgressBlock)progressBlock
-                                   failedWithError:(ErrorBlock)errorBlock
+                                   failedWithError:(ConnectionErrorBlock)errorBlock
                                    finishedRequest:(CompletionBlock)completionBlock;
 
 /**

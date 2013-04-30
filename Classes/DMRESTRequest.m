@@ -20,7 +20,7 @@
 }
 @property (nonatomic, copy) ResponseBlock responseBlock;
 @property (nonatomic, copy) ProgressBlock progressBlock;
-@property (nonatomic, copy) ErrorBlock errorBlock;
+@property (nonatomic, copy) ConnectionErrorBlock errorBlock;
 @property (nonatomic, copy) CompletionBlock completionBlock;
 @property (nonatomic, copy) HTTPAuthBlock httpAuthBlock;
 @property (nonatomic, copy) FullCompletionBlock fullCompletionBlock;
@@ -188,7 +188,7 @@
 - (void)executeDetailedBlockRequestReceivedResponse:(ResponseBlock)responseBlock
                               requestAskforHTTPAuth:(HTTPAuthBlock)httpAuthBlock
                            progressWithReceivedData:(ProgressBlock)progressBlock
-                                    failedWithError:(ErrorBlock)errorBlock
+                                    failedWithError:(ConnectionErrorBlock)errorBlock
                                     finishedRequest:(CompletionBlock)completionBlock
 {
     _completionBlock = completionBlock;
