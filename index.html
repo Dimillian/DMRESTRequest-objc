@@ -38,9 +38,7 @@
 <p><strong>DMRESTRequest</strong> is a super simple wrapper around <strong>NSURLConnection</strong> and <strong>NSMutableRequest</strong>. 
 It's allow you to launch REST Requests to your server in 2 line, literally. </p>
 
-<p><strong>DMRESTRequest</strong> built using <strong>ARC</strong> and targeted for iOS 5 and later, Mac OSX Snow Leopard and later. </p>
-
-<p>I wrote it as an highly re-usable class, you are invited to customize it to make it fit in your client/server implementation.</p>
+<p><strong>DMRESTRequest</strong> built using <strong>ARC</strong> and targeted for iOS 5 and later. It's build as a <strong>static library</strong> so it's very easy to link it with your project.</p>
 
 <p>This is not a framework nor a complete solution like RESTKit is. </p>
 
@@ -65,7 +63,7 @@ It's allow you to launch REST Requests to your server in 2 line, literally. </p>
 
 <p><code>DMRESTSettings</code> manage settings shared between your <code>DMRESTRequest</code> instances.
 You set them once (before any request) and then they are used for every other requests.
-The minimum to set is the <code>baseURL</code> and <code>fileExtension</code>. 
+The minimum to set is the <code>baseURL</code>
 You set them like this</p>
 
 <pre><code>[[DMRESTSettings sharedSettings]setBaseURL:[NSURL URLWithString:@"https://api.virtual-info.info/"]];
@@ -75,8 +73,7 @@ You set them like this</p>
 <p>You can also set an instance of <code>DMRESTSettings</code> for a specific requests, so you can prevent this requests to use the shared settings
 Take a look at the initializer of <code>DMRESTSettings</code></p>
 
-<pre><code>-(id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL
-                     fileExtension:(NSString *)fileExtension;
+<pre><code>-(id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL;
 </code></pre>
 
 <p>And then set it to the property <code>privateCustomSettings</code> of <code>DMRESTRequest</code>.</p>
@@ -110,17 +107,19 @@ It will automagically convert your parameters to a JSON string and set the HTTP 
 
 <h2>Getting started</h2>
 
-<p>Just add every file of the <strong>classes/</strong> folder to your project.</p>
+<p>Drag the <code>DMRESTRequest.xcodeproj</code> from the Finder to your openned project. </p>
 
-<p>This is a really simple set of classes, ready to use, just import <strong>DMRESTRequest</strong>, and <strong>NSString+TotalEscaping</strong> in your project, import <strong>DMRESTRequest.h</strong>  where you wan to make requests and you're done. </p>
+<p>In the build phase of your target, in the <strong>"target dependencies"</strong> add <code>DMRESTRequest</code>, and in the <strong>"Link binary with library"</strong> add <code>libDMRESTRequest.a</code>.</p>
+
+<p>Import <code>#import &lt;DMRESTRequest/DMRESTRequest.h&gt;</code> where you want to use it and you're done!</p>
 
 <h2>Code example</h2>
 
 <p>You will find more detailled examples in the project... </p>
 
-<h3>using block method</h3>
+<h3>using block based methods</h3>
 
-<pre><code>//Block method, short method without using the delegate. 
+<pre><code>//Block bsed method, short method without using the delegate. 
 DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET" 
                                                         ressource:@"self"
                                                             parameters:@{@"user": @"Dimillian"}];
@@ -138,10 +137,29 @@ DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET"
 }];
 </code></pre>
 
+<p><code>DMRESTRequest</code> also provide 2 other block based methods
+One which provide a chance to provide HTTP auth credentials</p>
+
+<pre><code>-(void)executeBlockRequest:(void (^)(NSURLResponse *response, NSData *data, NSError *error, BOOL success))handler
+                                requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock;
+</code></pre>
+
+<p>It also provide a complexe block based methods which simulate delegate and provide a lot of feedbacks. 
+Useful for tracking progress of a request</p>
+
+<pre><code>-(void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *response,
+                                                         NSInteger httpStatusCode,
+                                                         float exeptedContentSize))responseBlock
+                         requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock
+                      progressWithReceivedData:(void (^)(NSData *currentData, NSData *newData, float currentSize))progressBlock
+                               failedWithError:(void(^)(NSError *error))errorBlock
+                               finishedRequest:(void(^)(NSData *completeData))completionBlock;                                                                      
+</code></pre>
+
 <h3>using delegate</h3>
 
 <pre><code>[restRequest setDelegate:self]; 
-[restRequest executeRequest]; 
+[restRequest executeRequestWithDelegate]; 
 
 -(void)requestDidStart
 {
@@ -190,7 +208,7 @@ DMRESTRequest *blockrestRequest = [[DMRESTRequest alloc]initWithMethod:@"GET"
 <li>Create your own JSON parsers and create your own model to match your server implementation and make them works with this class. </li>
 </ol><h2>Licensing</h2>
 
-<p>Copyright (C) 2012 by Thomas Ricouard. </p>
+<p>Copyright (C) 2013 by Thomas Ricouard. </p>
 
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
