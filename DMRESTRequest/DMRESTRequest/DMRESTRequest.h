@@ -7,9 +7,9 @@
 
 #import <Foundation/Foundation.h>
 #import "DMRESTSettings.h"
+
 @class DMRESTHTTPAuthCredential;
 @protocol DMRESTRequestDelegate;
-
 
 typedef void (^DMResponseBlock)(NSURLResponse *, NSInteger, long long);
 typedef void (^DMProgressBlock)(NSMutableData *, NSData *, NSUInteger);
