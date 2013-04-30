@@ -18,12 +18,12 @@
     long long _contentSize;
     NSUInteger _currentSize;
 }
-@property (nonatomic, copy) ResponseBlock responseBlock;
-@property (nonatomic, copy) ProgressBlock progressBlock;
-@property (nonatomic, copy) ConnectionErrorBlock errorBlock;
-@property (nonatomic, copy) CompletionBlock completionBlock;
-@property (nonatomic, copy) HTTPAuthBlock httpAuthBlock;
-@property (nonatomic, copy) FullCompletionBlock fullCompletionBlock;
+@property (nonatomic, copy) DMResponseBlock responseBlock;
+@property (nonatomic, copy) DMProgressBlock progressBlock;
+@property (nonatomic, copy) DMConnectionErrorBlock errorBlock;
+@property (nonatomic, copy) DMCompletionBlock completionBlock;
+@property (nonatomic, copy) DMHTTPAuthBlock httpAuthBlock;
+@property (nonatomic, copy) DMFullCompletionBlock fullCompletionBlock;
 
 @property (nonatomic, readonly) DMRESTSettings *inUseSettings;
 @property (nonatomic, strong) NSString *method;
@@ -160,7 +160,7 @@
                                              error:&error]; 
 }
 
--(void)executeBlockRequest:(FullCompletionBlock)completion
+-(void)executeBlockRequest:(DMFullCompletionBlock)completion
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES; 
     [NSURLConnection sendAsynchronousRequest:[self constructRequest] 
@@ -176,8 +176,8 @@
                            }];
 }
 
-- (void)executeBlockRequest:(FullCompletionBlock)completionBlock
-      requestAskforHTTPAuth:(HTTPAuthBlock)httpAuthBlock
+- (void)executeBlockRequest:(DMFullCompletionBlock)completionBlock
+      requestAskforHTTPAuth:(DMHTTPAuthBlock)httpAuthBlock
 {
     _fullCompletionBlock = completionBlock;
     _httpAuthBlock = httpAuthBlock;
@@ -185,11 +185,11 @@
     _connection = [[NSURLConnection alloc] initWithRequest:[self constructRequest] delegate:self];
 }
 
-- (void)executeDetailedBlockRequestReceivedResponse:(ResponseBlock)responseBlock
-                              requestAskforHTTPAuth:(HTTPAuthBlock)httpAuthBlock
-                           progressWithReceivedData:(ProgressBlock)progressBlock
-                                    failedWithError:(ConnectionErrorBlock)errorBlock
-                                    finishedRequest:(CompletionBlock)completionBlock
+- (void)executeDetailedBlockRequestReceivedResponse:(DMResponseBlock)responseBlock
+                              requestAskforHTTPAuth:(DMHTTPAuthBlock)httpAuthBlock
+                           progressWithReceivedData:(DMProgressBlock)progressBlock
+                                    failedWithError:(DMConnectionErrorBlock)errorBlock
+                                    finishedRequest:(DMCompletionBlock)completionBlock
 {
     _completionBlock = completionBlock;
     _errorBlock = errorBlock;

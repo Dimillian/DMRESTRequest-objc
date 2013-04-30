@@ -11,12 +11,12 @@
 @protocol DMRESTRequestDelegate;
 
 
-typedef void (^ResponseBlock)(NSURLResponse *, NSInteger, long long);
-typedef void (^ProgressBlock)(NSMutableData *, NSData *, NSUInteger);
-typedef void (^ConnectionErrorBlock)(NSError *);
-typedef void (^CompletionBlock)(NSData *);
-typedef void (^FullCompletionBlock)(NSURLResponse *, NSData *, NSError *, BOOL);
-typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
+typedef void (^DMResponseBlock)(NSURLResponse *, NSInteger, long long);
+typedef void (^DMProgressBlock)(NSMutableData *, NSData *, NSUInteger);
+typedef void (^DMConnectionErrorBlock)(NSError *);
+typedef void (^DMCompletionBlock)(NSData *);
+typedef void (^DMFullCompletionBlock)(NSURLResponse *, NSData *, NSError *, BOOL);
+typedef DMRESTHTTPAuthCredential *(^DMHTTPAuthBlock)(void);
 
 /**
  DMRESTRequest is here to manage REST request easily within your application
@@ -50,14 +50,14 @@ typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
 /**
  Execute a standard request using block, provide inline response, data and error
  */
--(void)executeBlockRequest:(FullCompletionBlock)completionBlock;
+-(void)executeBlockRequest:(DMFullCompletionBlock)completionBlock;
 
 /**
  Execute a standard request using block, provide inline response, data and error
  Also provide a block that let you a chance to provide you own HTTPAUth Credential
  */
--(void)executeBlockRequest:(FullCompletionBlock)completionBlock
-     requestAskforHTTPAuth:(HTTPAuthBlock)httpAuthBlock;
+-(void)executeBlockRequest:(DMFullCompletionBlock)completionBlock
+     requestAskforHTTPAuth:(DMHTTPAuthBlock)httpAuthBlock;
 
 /**
  Execute a standard request using block, provide different callback as block, it emulate delegate but with block
@@ -67,11 +67,11 @@ typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
  errorBlock: Called when the request fail with an error
  completionBlock: Called once the request is done, provide complete data
  */
--(void)executeDetailedBlockRequestReceivedResponse:(ResponseBlock)responseBlock
-                             requestAskforHTTPAuth:(HTTPAuthBlock)httpAuthBlock
-                          progressWithReceivedData:(ProgressBlock)progressBlock
-                                   failedWithError:(ConnectionErrorBlock)errorBlock
-                                   finishedRequest:(CompletionBlock)completionBlock;
+-(void)executeDetailedBlockRequestReceivedResponse:(DMResponseBlock)responseBlock
+                             requestAskforHTTPAuth:(DMHTTPAuthBlock)httpAuthBlock
+                          progressWithReceivedData:(DMProgressBlock)progressBlock
+                                   failedWithError:(DMConnectionErrorBlock)errorBlock
+                                   finishedRequest:(DMCompletionBlock)completionBlock;
 
 /**
  Execute the request using delegate, you must set the delegate before calling this method
