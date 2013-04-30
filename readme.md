@@ -3,9 +3,7 @@
 **DMRESTRequest** is a super simple wrapper around **NSURLConnection** and **NSMutableRequest**. 
 It's allow you to launch REST Requests to your server in 2 line, literally. 
 
-**DMRESTRequest** built using **ARC** and targeted for iOS 5 and later, Mac OSX Snow Leopard and later. 
-
-I wrote it as an highly re-usable class, you are invited to customize it to make it fit in your client/server implementation.
+**DMRESTRequest** built using **ARC** and targeted for iOS 5 and later. It's build as a **static library** so it's very easy to link it with your project.
 
 This is not a framework nor a complete solution like RESTKit is. 
 
@@ -65,9 +63,11 @@ You can add permanent parameters such as a Auth Token with the `DMRESTSettings` 
 `- (void)setPermananentParameterValue:(id)value forParameter:(NSString *)parameter;`
 
 ## Getting started
-Just add every files of the **classes/** folder to your project.
+Drag the `DMRESTRequest.xcodeproj` from the Finder to your openned project. 
 
-This is a really simple set of classes, ready to use, just import **DMRESTRequest** where you wan to make requests and you're done. 
+In the build phase of your target, in the **"target dependencies"** add `DMRESTRequest`, and in the **"Link binary with library"** add `libDMRESTRequest.a`.
+
+Import `#import <DMRESTRequest/DMRESTRequest.h>` where you want to use it and you're done!
 
 ## Code example
 You will find more detailled examples in the project... 
