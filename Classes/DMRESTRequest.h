@@ -9,6 +9,15 @@
 #import "DMRESTSettings.h"
 @class DMRESTHTTPAuthCredential;
 @protocol DMRESTRequestDelegate;
+
+
+typedef void (^ResponseBlock)(NSURLResponse *, NSInteger, long long);
+typedef void (^ProgressBlock)(NSData *, NSData *, NSUInteger);
+typedef void (^ErrorBlock)(NSError *);
+typedef void (^CompletionBlock)(NSData *);
+typedef void (^FullCompletionBlock)(NSURLResponse *, NSData *, NSError *, BOOL);
+typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
+
 /**
  DMRESTRequest is here to manage REST request easily within your application
  */
@@ -41,14 +50,14 @@
 /**
  Execute a standard request using block, provide inline response, data and error
  */
--(void)executeBlockRequest:(void (^)(NSURLResponse *response, NSData *data, NSError *error, BOOL success))handler;
+-(void)executeBlockRequest:(FullCompletionBlock)completionBlock;
 
 /**
  Execute a standard request using block, provide inline response, data and error
  Also provide a block that let you a chance to provide you own HTTPAUth Credential
  */
--(void)executeBlockRequest:(void (^)(NSURLResponse *response, NSData *data, NSError *error, BOOL success))handler
-                                    requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock;
+-(void)executeBlockRequest:(FullCompletionBlock)completionBlock
+     requestAskforHTTPAuth:(HTTPAuthBlock)httpAuthBlock;
 
 /**
  Execute a standard request using block, provide different callback as block, it emulate delegate but with block
@@ -58,13 +67,11 @@
  errorBlock: Called when the request fail with an error
  completionBlock: Called once the request is done, provide complete data
  */
--(void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *response,
-                                                             NSInteger httpStatusCode,
-                                                             long long exeptedContentSize))responseBlock
-                             requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock
-                          progressWithReceivedData:(void (^)(NSData *currentData, NSData *newData, NSUInteger currentLength))progressBlock
-                                   failedWithError:(void(^)(NSError *error))errorBlock
-                                   finishedRequest:(void(^)(NSData *completeData))completionBlock;
+-(void)executeDetailedBlockRequestReceivedResponse:(ResponseBlock)responseBlock
+                             requestAskforHTTPAuth:(HTTPAuthBlock)httpAuthBlock
+                          progressWithReceivedData:(ProgressBlock)progressBlock
+                                   failedWithError:(ErrorBlock)errorBlock
+                                   finishedRequest:(CompletionBlock)completionBlock;
 
 /**
  Execute the request using delegate, you must set the delegate before calling this method

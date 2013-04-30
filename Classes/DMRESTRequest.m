@@ -8,13 +8,6 @@
 #import "DMRESTRequest.h"
 #import "NSString+TotalEscaping.h"
 
-typedef void (^ResponseBlock)(NSURLResponse *, NSInteger, long long);
-typedef void (^ProgressBlock)(NSData *, NSData *, NSUInteger);
-typedef void (^ErrorBlock)(NSError *);
-typedef void (^CompletionBlock)(NSData *);
-typedef void (^FullCompletionBlock)(NSURLResponse *, NSData *, NSError *, BOOL);
-typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
-
 @interface DMRESTRequest ()
 {
     NSMutableData *_responseData;
@@ -167,7 +160,7 @@ typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
                                              error:&error]; 
 }
 
--(void)executeBlockRequest:(void (^)(NSURLResponse *, NSData *, NSError *, BOOL))handler
+-(void)executeBlockRequest:(FullCompletionBlock)completion
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES; 
     [NSURLConnection sendAsynchronousRequest:[self constructRequest] 
@@ -175,28 +168,28 @@ typedef DMRESTHTTPAuthCredential *(^HTTPAuthBlock)(void);
                            completionHandler:^(NSURLResponse *res, NSData *data, NSError *error){
                                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                                if (error.code == -1009) {
-                                   handler(res, data, error, NO);
+                                   completion(res, data, error, NO);
                                }
                                else{
-                                   handler(res, data, error, YES);
+                                   completion(res, data, error, YES);
                                }
                            }];
 }
 
-- (void)executeBlockRequest:(void (^)(NSURLResponse *, NSData *, NSError *, BOOL))handler
-      requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock
+- (void)executeBlockRequest:(FullCompletionBlock)completionBlock
+      requestAskforHTTPAuth:(HTTPAuthBlock)httpAuthBlock
 {
-    _fullCompletionBlock = handler;
+    _fullCompletionBlock = completionBlock;
     _httpAuthBlock = httpAuthBlock;
     _responseData = [[NSMutableData alloc] init];
     _connection = [[NSURLConnection alloc] initWithRequest:[self constructRequest] delegate:self];
 }
 
-- (void)executeDetailedBlockRequestReceivedResponse:(void (^)(NSURLResponse *, NSInteger, long long))responseBlock
-                              requestAskforHTTPAuth:(DMRESTHTTPAuthCredential *(^)(void))httpAuthBlock
-                           progressWithReceivedData:(void (^)(NSData *, NSData *, NSUInteger))progressBlock
-                                    failedWithError:(void (^)(NSError *))errorBlock
-                                    finishedRequest:(void (^)(NSData *))completionBlock
+- (void)executeDetailedBlockRequestReceivedResponse:(ResponseBlock)responseBlock
+                              requestAskforHTTPAuth:(HTTPAuthBlock)httpAuthBlock
+                           progressWithReceivedData:(ProgressBlock)progressBlock
+                                    failedWithError:(ErrorBlock)errorBlock
+                                    finishedRequest:(CompletionBlock)completionBlock
 {
     _completionBlock = completionBlock;
     _errorBlock = errorBlock;
