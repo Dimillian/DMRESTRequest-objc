@@ -125,7 +125,7 @@
     
     
     //Other example with multiple parameters and other properties and using delegate
-    DMRESTRequest *newRequest = [[DMRESTRequest alloc]initWithMethod:@"POST"
+    _restRequest = [[DMRESTRequest alloc]initWithMethod:@"POST"
                                                            ressource:@"users"
                                                           parameters:
                                  [NSDictionary dictionaryWithObjectsAndKeys:@"13", @"userId", @"Dimillian", @"username", nil]];
@@ -134,8 +134,8 @@
     [privateSettings setFileExtension:@"json"];
     privateSettings.customTimemout = 40;
     privateSettings.sendJSON = YES;
-    [newRequest setDelegate:self];
-    [newRequest executeRequestWithDelegate];
+    [_restRequest setDelegate:self];
+    [_restRequest executeRequestWithDelegate];
 }
 
 - (void)viewDidUnload

@@ -11,6 +11,6 @@
 
 @interface ViewController : UIViewController <DMRESTRequestDelegate>
 {
-    DMRESTRequest *restRequest; 
+    DMRESTRequest *_restRequest;
 }
 @end
