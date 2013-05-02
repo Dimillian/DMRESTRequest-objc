@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import <DMRESTRequest/DMJSONCache.h>
 
 @interface ViewController ()
 
@@ -23,9 +24,8 @@
     [[DMRESTSettings sharedSettings]setPermananentParameterValue:@"1234" forParameter:@"AuthToken"];
     NSLog(@"%@", [[DMRESTSettings sharedSettings]valueForPermanentParameter:@"AuthToken"]);
     
-    
+    [self simpleCachedJSONBlockRequest];
     [self simpleBlockRequest];
-    [self simpleJSONBlockRequest];
     [self complexeBlockRequest];
     [self privateSettingsBlockRequest];
     [self httpAuthBlockRequest];
@@ -56,18 +56,25 @@
     }];
 }
 
-- (void)simpleJSONBlockRequest
+- (void)simpleCachedJSONBlockRequest
 {
     //Simple block JSON request when you are sure that your API return JSON, DMRESTRequest take care of returnin a JSONObject which can be a
     //NSDictionnary or a NSArray
     DMRESTRequest *request = [[DMRESTRequest alloc]initWithMethod:@"GET"
                                                         ressource:@"self"
                                                        parameters:@{@"user": @"dimillian"}];
-    [request executeJSONBlockRequestWithJSONReadingOption:NSJSONReadingAllowFragments
-                                               completion:^(NSURLResponse *response, id JSONObject, NSError *error, BOOL success) {
-                                                   NSDictionary *jsonDic = (NSDictionary *)JSONObject;
-                                                   NSLog(@"Dic from JSON: %@", jsonDic);
-                                                   NSLog(@"param: %@", [jsonDic objectForKey:@"query_parameters"]);
+    [request executeJSONBlockRequestWithCache:YES
+                            JSONReadingOption:NSJSONReadingAllowFragments
+                                   completion:^(NSURLResponse *response, id JSONObject, NSError *error, BOOL success, BOOL fromCache) {
+                                       NSDictionary *jsonDic = (NSDictionary *)JSONObject;
+                                       if (fromCache) {
+                                           NSLog(@"CACHED JSON: %@", jsonDic);
+                                       }
+                                       else{
+                                           NSLog(@"SERVER JSON: %@", jsonDic);
+                                           
+                                       }
+        
     }];
 }
 

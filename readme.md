@@ -41,6 +41,17 @@ And then set it to the property `privateCustomSettings` of `DMRESTRequest`.
 
 Use the singleton `[DMRESTSettings sharedSettings`] to set shared settings.
 
+###JSON and Cache
+If your API send back JSON data type you should really take look at this speficic method for executing your requests.
+
+	-(void)executeJSONBlockRequestWithCache:(BOOL)useCache
+                      JSONReadingOption:(NSJSONReadingOptions)option
+                             completion:(DMJSONCacheCompletionBlock)completionBlock;
+
+It automaticcaly cache the response and send you back JSON object (NSDictionnary or NSArray). The completion block is called twice if a cached response is found. Once with the cached result, and once with the respone from the server
+
+`DMRESTRequest` provide a cache service, `DMJSONCache`, it should not be used alone. `DMRESTRequest` use it automatically when you execute request with the methode above. `DMJSONCache` provide some methods if you want to clean the in memory cache or the disk one. The in memory store respond to memory warning and will be automatically free if one is received.
+
 ###Timeout
 Default `Timeout` interval is 60 seconds You can you can set:
 

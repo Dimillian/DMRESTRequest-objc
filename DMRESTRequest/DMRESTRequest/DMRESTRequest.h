@@ -16,7 +16,7 @@ typedef void (^DMProgressBlock)(NSMutableData *completeData, NSData *newData, NS
 typedef void (^DMConnectionErrorBlock)(NSError *error);
 typedef void (^DMCompletionBlock)(NSData *data);
 typedef void (^DMFullCompletionBlock)(NSURLResponse *response, NSData *data, NSError *error, BOOL success);
-typedef void (^DMJSONFullCompletionBLock)(NSURLResponse *response, id JSONObject, NSError *error, BOOL success);
+typedef void (^DMJSONCacheCompletionBlock)(NSURLResponse *response, id JSONObject, NSError *error, BOOL success, BOOL fromCache);
 typedef DMRESTHTTPAuthCredential *(^DMHTTPAuthBlock)(void);
 
 /**
@@ -53,14 +53,18 @@ typedef DMRESTHTTPAuthCredential *(^DMHTTPAuthBlock)(void);
  */
 -(void)executeBlockRequest:(DMFullCompletionBlock)completionBlock;
 
+
 /**
- Execute a standard request using block, if you know that the API you're working with will send back
- JSON then you can use this method, the block will directly return a JSON object in a NSDictionnary or
- NSArray
+ Note: YOU SOULD Really use this method if you are working with a JSON API.
+ Special method, call the completionBlock twice, once with cached result (from memory or disk), one with result from your request
+ Only work with API return JSON type data.
+ Automatically cache the JSON at the end of the request.
+ Cached result are only used for GET request, also the callback will not be called twice if no cache is present
  @param option The NSJSONReadingOption will be used when creating the JSON object from received data
  */
--(void)executeJSONBlockRequestWithJSONReadingOption:(NSJSONReadingOptions)option
-                                 completion:(DMJSONFullCompletionBLock)completionBlock;
+-(void)executeJSONBlockRequestWithCache:(BOOL)useCache
+                      JSONReadingOption:(NSJSONReadingOptions)option
+                             completion:(DMJSONCacheCompletionBlock)completionBlock;
 
 /**
  Execute a standard request using block, provide inline response, data and error

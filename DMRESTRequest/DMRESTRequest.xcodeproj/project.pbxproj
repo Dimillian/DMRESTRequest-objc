@@ -19,6 +19,8 @@
 		531F2D51172FE66400C188C4 /* NSString+TotalEscaping.m in Sources */ = {isa = PBXBuildFile; fileRef = 531F2D4F172FE66400C188C4 /* NSString+TotalEscaping.m */; };
 		531F2D54172FE6D600C188C4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 531F2D53172FE6D600C188C4 /* UIKit.framework */; };
 		531F2D57172FE76F00C188C4 /* DMRESTSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 531F2D4C172FE66400C188C4 /* DMRESTSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		53A70F4F1732990E0015779D /* DMJSONCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 53A70F4D1732990E0015779D /* DMJSONCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		53A70F501732990E0015779D /* DMJSONCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 53A70F4E1732990E0015779D /* DMJSONCache.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,8 @@
 		531F2D4E172FE66400C188C4 /* NSString+TotalEscaping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TotalEscaping.h"; sourceTree = "<group>"; };
 		531F2D4F172FE66400C188C4 /* NSString+TotalEscaping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TotalEscaping.m"; sourceTree = "<group>"; };
 		531F2D53172FE6D600C188C4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		53A70F4D1732990E0015779D /* DMJSONCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMJSONCache.h; path = ../../DMRestRequest/DMRESTRequest/DMJSONCache.h; sourceTree = "<group>"; };
+		53A70F4E1732990E0015779D /* DMJSONCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMJSONCache.m; path = ../../DMRestRequest/DMRESTRequest/DMJSONCache.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +114,8 @@
 				531F2D2B172FE64E00C188C4 /* DMRESTRequest.m */,
 				531F2D4C172FE66400C188C4 /* DMRESTSettings.h */,
 				531F2D4D172FE66400C188C4 /* DMRESTSettings.m */,
+				53A70F4D1732990E0015779D /* DMJSONCache.h */,
+				53A70F4E1732990E0015779D /* DMJSONCache.m */,
 				531F2D27172FE64E00C188C4 /* Supporting Files */,
 			);
 			path = DMRESTRequest;
@@ -160,6 +166,7 @@
 			files = (
 				531F2D57172FE76F00C188C4 /* DMRESTSettings.h in Headers */,
 				531F2D2A172FE64E00C188C4 /* DMRESTRequest.h in Headers */,
+				53A70F4F1732990E0015779D /* DMJSONCache.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +271,7 @@
 				531F2D2C172FE64E00C188C4 /* DMRESTRequest.m in Sources */,
 				531F2D50172FE66400C188C4 /* DMRESTSettings.m in Sources */,
 				531F2D51172FE66400C188C4 /* NSString+TotalEscaping.m in Sources */,
+				53A70F501732990E0015779D /* DMJSONCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

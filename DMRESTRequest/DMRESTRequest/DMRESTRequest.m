@@ -8,6 +8,7 @@
 #import "DMRESTRequest.h"
 #import "NSString+TotalEscaping.h"
 #import <UIKit/UIKit.h>
+#import "DMJSONCache.h"
 
 @interface DMRESTRequest ()
 {
@@ -19,12 +20,19 @@
     long long _contentSize;
     NSUInteger _currentSize;
 }
+
+-(NSMutableURLRequest *)constructRequest;
+-(NSURL *)getURL;
+-(NSString *)constructParametersString;
+-(NSData *)parametersToJSON;
+
 @property (nonatomic, copy) DMResponseBlock responseBlock;
 @property (nonatomic, copy) DMProgressBlock progressBlock;
 @property (nonatomic, copy) DMConnectionErrorBlock errorBlock;
 @property (nonatomic, copy) DMCompletionBlock completionBlock;
 @property (nonatomic, copy) DMHTTPAuthBlock httpAuthBlock;
 @property (nonatomic, copy) DMFullCompletionBlock fullCompletionBlock;
+@property (nonatomic, copy) DMJSONCacheCompletionBlock jsonCacheCompletionBlock;
 
 @property (nonatomic, readonly) DMRESTSettings *inUseSettings;
 @property (nonatomic, strong) NSString *method;
@@ -64,19 +72,7 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setTimeoutInterval:self.inUseSettings.customTimemout];
     if ([_method isEqualToString:@"GET"]) {
-        NSString *fileExt;
-        if (self.inUseSettings.fileExtension) {
-            fileExt = self.inUseSettings.fileExtension;
-        }
-        else{
-            fileExt = @"";
-        }
-        [request setURL:[NSURL URLWithString:
-                         [NSString stringWithFormat:@"%@/%@.%@?%@",
-                          self.inUseSettings.baseURL.absoluteString,
-                          _ressource,
-                          fileExt,
-                          [self constructParametersString]]]];
+        [request setURL:[self getURL]];
     }
     else {
         [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.%@",
@@ -105,6 +101,23 @@
         
     }
     return request; 
+}
+
+-(NSURL *)getURL
+{
+    NSString *fileExt;
+    if (self.inUseSettings.fileExtension) {
+        fileExt = self.inUseSettings.fileExtension;
+    }
+    else{
+        fileExt = @"";
+    }
+    return [NSURL URLWithString:
+                     [NSString stringWithFormat:@"%@/%@.%@?%@",
+                      self.inUseSettings.baseURL.absoluteString,
+                      _ressource,
+                      fileExt,
+                      [self constructParametersString]]];
 }
 
 -(NSString *)constructParametersString
@@ -177,16 +190,25 @@
                            }];
 }
 
--(void)executeJSONBlockRequestWithJSONReadingOption:(NSJSONReadingOptions)option
-                                         completion:(DMJSONFullCompletionBLock)completionBlock
+
+-(void)executeJSONBlockRequestWithCache:(BOOL)useCache
+                      JSONReadingOption:(NSJSONReadingOptions)option
+                             completion:(DMJSONCacheCompletionBlock)completionBlock
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    NSString *fileName = [DMJSONCache generateKeyFromURLString:[[self getURL]absoluteString]];
+    if ([_method isEqualToString:@"GET"] && useCache) {
+        id cachedObject = [[DMJSONCache sharedCache]cachedJSONObjectForKey:fileName];
+        if (cachedObject) {
+            completionBlock(nil, cachedObject, nil, YES, YES);
+        }
+    }
     [NSURLConnection sendAsynchronousRequest:[self constructRequest]
                                        queue:[NSOperationQueue currentQueue]
                            completionHandler:^(NSURLResponse *res, NSData *data, NSError *error){
                                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                                if (error.code == -1009) {
-                                   completionBlock(res, nil, error, NO);
+                                   completionBlock(res, nil, error, NO, NO);
                                }
                                else{
                                    NSError *jsonError = nil;
@@ -194,14 +216,18 @@
                                                                                    options:option
                                                                                      error:&jsonError];
                                    if (!error && jsonObject) {
-                                       completionBlock(res, jsonObject, nil, YES);
+                                       if (useCache) {
+                                           [[DMJSONCache sharedCache]cacheJSONObject:jsonObject forKey:fileName];   
+                                       }
+                                       completionBlock(res, jsonObject, nil, YES, NO);
                                    }
                                    else{
-                                       completionBlock(res, nil, jsonError, NO);
+                                       completionBlock(res, nil, jsonError, NO, NO);
                                    }
                                }
-     
+                               
                            }];
+
 }
 
 - (void)executeBlockRequest:(DMFullCompletionBlock)completionBlock
