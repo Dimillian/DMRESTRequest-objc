@@ -67,7 +67,7 @@ Drag the `DMRESTRequest.xcodeproj` from the Finder to your openned project.
 
 In the build phase of your target, in the **"target dependencies"** add `DMRESTRequest`, and in the **"Link binary with library"** add `libDMRESTRequest.a`.
 
-Now in the build settings of your target set the **Always search user paths** to `YES` and add to the **User headers search paths** this : `$(PROJECT_TEMP_DIR)/../UninstalledProducts/include`
+Now in the build settings of your target set the **Always search user paths** to `YES` and add to the **User header search paths** this : `$(PROJECT_TEMP_DIR)/../UninstalledProducts/include`
 
 Import `#import <DMRESTRequest/DMRESTRequest.h>` where you want to use it and you're done!
 
