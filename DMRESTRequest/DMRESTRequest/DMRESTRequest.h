@@ -11,7 +11,7 @@
 @class DMRESTHTTPAuthCredential;
 @protocol DMRESTRequestDelegate;
 
-typedef void (^DMResponseBlock)(NSURLResponse *response, NSInteger HTTPStatusCode, long long exeptedLenght);
+typedef void (^DMResponseBlock)(NSURLResponse *response, NSInteger HTTPStatusCode, long long exeptedLength);
 typedef void (^DMProgressBlock)(NSMutableData *completeData, NSData *newData, NSUInteger newDataLength);
 typedef void (^DMConnectionErrorBlock)(NSError *error);
 typedef void (^DMCompletionBlock)(NSData *data);
