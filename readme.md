@@ -67,6 +67,8 @@ Drag the `DMRESTRequest.xcodeproj` from the Finder to your openned project.
 
 In the build phase of your target, in the **"target dependencies"** add `DMRESTRequest`, and in the **"Link binary with library"** add `libDMRESTRequest.a`.
 
+Now in the build settings of your target set the **Always search user paths** to `YES` and add to the **User headers search paths** this : `$(PROJECT_TEMP_DIR)/../UninstalledProducts/include`
+
 Import `#import <DMRESTRequest/DMRESTRequest.h>` where you want to use it and you're done!
 
 ## Code example
@@ -149,14 +151,6 @@ Useful for tracking progress of a request
 ###Cancel a request
 	[restRequest cancelRequest]; 
 	
-
-	
-## How to enhance it ? 
-Here is a few points you should take into considerations to make this class better.
-
-1. Add a method to inject your **OAUTH** token within **DMRESTRequest**
-2. Make it more HTTP compliant. Support custom content type. 
-3. Create your own JSON parsers and create your own model to match your server implementation and make them works with this class. 
 
 ## Licensing 
 Copyright (C) 2013 by Thomas Ricouard. 

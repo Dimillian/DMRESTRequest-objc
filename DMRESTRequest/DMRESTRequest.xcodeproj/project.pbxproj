@@ -358,7 +358,7 @@
 				GCC_PREFIX_HEADER = "DMRESTRequest/DMRESTRequest-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "include/$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = include/DMRESTRequest;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -371,7 +371,7 @@
 				GCC_PREFIX_HEADER = "DMRESTRequest/DMRESTRequest-Prefix.pch";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "include/$(TARGET_NAME)";
+				PUBLIC_HEADERS_FOLDER_PATH = include/DMRESTRequest;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;

@@ -329,10 +329,12 @@
 		531F2D85172FE7BE00C188C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DMRESTRequestExample/DMRESTRequestExample-Prefix.pch";
 				INFOPLIST_FILE = "DMRESTRequestExample/DMRESTRequestExample-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_TEMP_DIR)/../UninstalledProducts/include";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -340,10 +342,12 @@
 		531F2D86172FE7BE00C188C4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DMRESTRequestExample/DMRESTRequestExample-Prefix.pch";
 				INFOPLIST_FILE = "DMRESTRequestExample/DMRESTRequestExample-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_TEMP_DIR)/../UninstalledProducts/include";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
