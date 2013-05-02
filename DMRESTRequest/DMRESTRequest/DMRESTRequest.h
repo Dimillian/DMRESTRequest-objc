@@ -11,11 +11,12 @@
 @class DMRESTHTTPAuthCredential;
 @protocol DMRESTRequestDelegate;
 
-typedef void (^DMResponseBlock)(NSURLResponse *, NSInteger, long long);
-typedef void (^DMProgressBlock)(NSMutableData *, NSData *, NSUInteger);
-typedef void (^DMConnectionErrorBlock)(NSError *);
-typedef void (^DMCompletionBlock)(NSData *);
-typedef void (^DMFullCompletionBlock)(NSURLResponse *, NSData *, NSError *, BOOL);
+typedef void (^DMResponseBlock)(NSURLResponse *response, NSInteger HTTPStatusCode, long long exeptedLenght);
+typedef void (^DMProgressBlock)(NSMutableData *completeData, NSData *newData, NSUInteger newDataLength);
+typedef void (^DMConnectionErrorBlock)(NSError *error);
+typedef void (^DMCompletionBlock)(NSData *data);
+typedef void (^DMFullCompletionBlock)(NSURLResponse *response, NSData *data, NSError *error, BOOL success);
+typedef void (^DMJSONFullCompletionBLock)(NSURLResponse *response, id JSONObject, NSError *error, BOOL success);
 typedef DMRESTHTTPAuthCredential *(^DMHTTPAuthBlock)(void);
 
 /**
@@ -51,6 +52,15 @@ typedef DMRESTHTTPAuthCredential *(^DMHTTPAuthBlock)(void);
  Execute a standard request using block, provide inline response, data and error
  */
 -(void)executeBlockRequest:(DMFullCompletionBlock)completionBlock;
+
+/**
+ Execute a standard request using block, if you know that the API you're working with will send back
+ JSON then you can use this method, the block will directly return a JSON object in a NSDictionnary or
+ NSArray
+ @param option The NSJSONReadingOption will be used when creating the JSON object from received data
+ */
+-(void)executeJSONBlockRequestWithJSONReadingOption:(NSJSONReadingOptions)option
+                                 completion:(DMJSONFullCompletionBLock)completionBlock;
 
 /**
  Execute a standard request using block, provide inline response, data and error

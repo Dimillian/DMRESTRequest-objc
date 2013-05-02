@@ -25,6 +25,7 @@
     
     
     [self simpleBlockRequest];
+    [self simpleJSONBlockRequest];
     [self complexeBlockRequest];
     [self privateSettingsBlockRequest];
     [self httpAuthBlockRequest];
@@ -52,6 +53,21 @@
             NSLog(@"%@", json);
             //TODO do something with response
         }
+    }];
+}
+
+- (void)simpleJSONBlockRequest
+{
+    //Simple block JSON request when you are sure that your API return JSON, DMRESTRequest take care of returnin a JSONObject which can be a
+    //NSDictionnary or a NSArray
+    DMRESTRequest *request = [[DMRESTRequest alloc]initWithMethod:@"GET"
+                                                        ressource:@"self"
+                                                       parameters:@{@"user": @"dimillian"}];
+    [request executeJSONBlockRequestWithJSONReadingOption:NSJSONReadingAllowFragments
+                                               completion:^(NSURLResponse *response, id JSONObject, NSError *error, BOOL success) {
+                                                   NSDictionary *jsonDic = (NSDictionary *)JSONObject;
+                                                   NSLog(@"Dic from JSON: %@", jsonDic);
+                                                   NSLog(@"param: %@", [jsonDic objectForKey:@"query_parameters"]);
     }];
 }
 

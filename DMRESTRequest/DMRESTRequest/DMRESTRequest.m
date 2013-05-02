@@ -161,7 +161,7 @@
                                              error:&error]; 
 }
 
--(void)executeBlockRequest:(DMFullCompletionBlock)completion
+-(void)executeBlockRequest:(DMFullCompletionBlock)completionBlock
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES; 
     [NSURLConnection sendAsynchronousRequest:[self constructRequest] 
@@ -169,11 +169,38 @@
                            completionHandler:^(NSURLResponse *res, NSData *data, NSError *error){
                                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                                if (error.code == -1009) {
-                                   completion(res, data, error, NO);
+                                   completionBlock(res, data, error, NO);
                                }
                                else{
-                                   completion(res, data, error, YES);
+                                   completionBlock(res, data, error, YES);
                                }
+                           }];
+}
+
+-(void)executeJSONBlockRequestWithJSONReadingOption:(NSJSONReadingOptions)option
+                                         completion:(DMJSONFullCompletionBLock)completionBlock
+{
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    [NSURLConnection sendAsynchronousRequest:[self constructRequest]
+                                       queue:[NSOperationQueue currentQueue]
+                           completionHandler:^(NSURLResponse *res, NSData *data, NSError *error){
+                               [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+                               if (error.code == -1009) {
+                                   completionBlock(res, nil, error, NO);
+                               }
+                               else{
+                                   NSError *jsonError = nil;
+                                   id jsonObject = [NSJSONSerialization JSONObjectWithData:data
+                                                                                   options:option
+                                                                                     error:&jsonError];
+                                   if (!error && jsonObject) {
+                                       completionBlock(res, jsonObject, nil, YES);
+                                   }
+                                   else{
+                                       completionBlock(res, nil, jsonError, NO);
+                                   }
+                               }
+     
                            }];
 }
 
