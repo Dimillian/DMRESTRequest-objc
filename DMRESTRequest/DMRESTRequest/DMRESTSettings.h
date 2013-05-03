@@ -16,25 +16,6 @@
 @interface DMRESTSettings : NSObject
 
 /**
- Designated singleton access to set and access the shared settings
- This singleton is used for all your DMRESTRequest if you don't set privateCustomSettings property to them
- */
-+(DMRESTSettings *)sharedSettings;
-
-/**
- Initiliazer if you don't want to use shared settings
- Create an instance of this class and set it to the privateCustomSettings field of your DMRESTRequest
- It will prevent it to use the shared settings but use the passed settings instead
- Will not copy current shared settings when created
- */
--(id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL;
-/**
- Initiliazer if you want to create private settings for a specific DMRESTRequest
- Will copy current shared settings when created
- */
--(id)initForPrivateSettingsFromSharedSettings;
-
-/**
  the base URL of all your request, must be set before doing a request
  */
 @property (nonatomic, strong) NSURL *baseURL;
@@ -74,6 +55,25 @@
 
 @property (nonatomic, strong, readonly) NSMutableDictionary *permanentHTTPHeaderFields;
 @property (nonatomic, strong, readonly) NSMutableDictionary *permanentParameters;
+
+/**
+ Designated singleton access to set and access the shared settings
+ This singleton is used for all your DMRESTRequest if you don't set privateCustomSettings property to them
+ */
++(DMRESTSettings *)sharedSettings;
+
+/**
+ Initiliazer if you don't want to use shared settings
+ Create an instance of this class and set it to the privateCustomSettings field of your DMRESTRequest
+ It will prevent it to use the shared settings but use the passed settings instead
+ Will not copy current shared settings when created
+ */
+-(id)initForPrivateSettingsWithBaseURL:(NSURL *)baseURL;
+/**
+ Initiliazer if you want to create private settings for a specific DMRESTRequest
+ Will copy current shared settings when created
+ */
+-(id)initForPrivateSettingsFromSharedSettings;
 
 /**
  @return The value of the passed header field, nil if no header value set for the passed header
