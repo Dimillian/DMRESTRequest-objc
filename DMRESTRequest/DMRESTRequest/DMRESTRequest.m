@@ -382,6 +382,7 @@
 @end
 
 @implementation DMRESTHTTPAuthCredential
+
 - (id)initWithLogin:(NSString *)login password:(NSString *)password continueLogin:(BOOL)continueLogin
 {
     self = [super init];
