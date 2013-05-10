@@ -344,8 +344,7 @@
             [self.delegate requestDidFinishWithJSON:json];
         }
     }
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
-    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;    
 }
 
 

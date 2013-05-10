@@ -16,7 +16,7 @@ typedef void (^DMProgressBlock)(NSMutableData *completeData, NSData *newData, NS
 typedef void (^DMConnectionErrorBlock)(NSError *error);
 typedef void (^DMCompletionBlock)(NSData *data);
 typedef void (^DMFullCompletionBlock)(NSURLResponse *response, NSData *data, NSError *error, BOOL success);
-typedef void (^DMJSONCacheCompletionBlock)(NSURLResponse *response, id JSONObject, NSError *error, BOOL success, BOOL fromCache);
+typedef void (^DMJSONCacheCompletionBlock)(NSURLResponse *response, id JSONObject, NSError *error, BOOL success, BOOL fromCache);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 typedef DMRESTHTTPAuthCredential *(^DMHTTPAuthBlock)(void);
 
 /**
@@ -29,7 +29,6 @@ typedef DMRESTHTTPAuthCredential *(^DMHTTPAuthBlock)(void);
  You don't need it if you only use block methods
  */
 @property (nonatomic, weak) id<DMRESTRequestDelegate> delegate;
-
 
 /**
  Set this property to use the passed settings instead of the shared settings
