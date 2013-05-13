@@ -8,12 +8,12 @@
 
 #import "DMRESTSettings.h"
 
-NSString * const kHeaderJson = @"application/json";
-NSString * const kUserAgent = @"User-Agent";
-NSString * const kHeaderFieldAccept = @"accept";
-NSString * const kHeaderFieldContentType = @"Content-Type";
-NSString * const kHeaderFieldAcceptEncoding = @"Accept-Encoding";
-NSString * const kDefaultHeaderValue = @"application/x-www-form-urlencoded";
+static NSString * const kHeaderJson = @"application/json";
+static NSString * const kUserAgent = @"User-Agent";
+static NSString * const kHeaderFieldAccept = @"accept";
+static NSString * const kHeaderFieldContentType = @"Content-Type";
+static NSString * const kHeaderFieldAcceptEncoding = @"Accept-Encoding";
+static NSString * const kDefaultHeaderValue = @"application/x-www-form-urlencoded";
 
 @interface DMRESTSettings ()
 @property (nonatomic, strong, readwrite) NSMutableDictionary *permanentHTTPHeaderFields;

@@ -16,5 +16,16 @@
          landmarkName = "-setUp"
          landmarkType = "5">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "DMRESTRequest/DMRESTSettings.m"
+         timestampString = "390140368.515328"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "12"
+         endingLineNumber = "12">
+      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

@@ -9,7 +9,7 @@
 #import "DMJSONCache.h"
 #import <UIKit/UIKit.h>
 
-static NSString *kCacheFolderName = @"DMRESTRequestCachedJSON";
+static NSString * const kCacheFolderName = @"DMRESTRequestCachedJSON";
 
 @interface DMJSONCache ()
 
