@@ -176,11 +176,15 @@
 
 -(void)executeBlockRequest:(DMFullCompletionBlock)completionBlock
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES; 
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;  
+    });
     [NSURLConnection sendAsynchronousRequest:[self constructRequest] 
                                        queue:[NSOperationQueue currentQueue] 
                            completionHandler:^(NSURLResponse *res, NSData *data, NSError *error){
-                               [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+                               dispatch_async(dispatch_get_main_queue(), ^{
+                                   [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+                               });
                                if (error.code == -1009) {
                                    completionBlock(res, data, error, NO);
                                }
@@ -195,7 +199,9 @@
                       JSONReadingOption:(NSJSONReadingOptions)option
                              completion:(DMJSONCacheCompletionBlock)completionBlock
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    });
     NSString *fileName = [DMJSONCache generateKeyFromURLString:[[self getURL]absoluteString]];
     if ([_method isEqualToString:@"GET"] && useCache) {
         id cachedObject = [[DMJSONCache sharedCache]cachedJSONObjectForKey:fileName];
@@ -206,7 +212,9 @@
     [NSURLConnection sendAsynchronousRequest:[self constructRequest]
                                        queue:[NSOperationQueue currentQueue]
                            completionHandler:^(NSURLResponse *res, NSData *data, NSError *error){
-                               [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+                               dispatch_async(dispatch_get_main_queue(), ^{
+                                   [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+                               });
                                if (error.code == -1009) {
                                    completionBlock(res, nil, error, NO, NO);
                                }
@@ -256,7 +264,9 @@
 
 - (void)executeRequestWithDelegate
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    });
     _connection = [[NSURLConnection alloc] initWithRequest:[self constructRequest] delegate:self];
     if (_connection) {
         _responseData = [[NSMutableData alloc] init];
@@ -267,9 +277,11 @@
 -(void)cancelRequest
 {
     [_connection cancel]; 
-    _connection = nil; 
-    _responseData = nil; 
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    _connection = nil;
+    _responseData = nil;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    });
     _completionBlock = nil;
     _errorBlock = nil;
     _progressBlock = nil;
@@ -318,7 +330,9 @@
     }
     _error = error;
     _success = NO;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    });
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -344,7 +358,9 @@
             [self.delegate requestDidFinishWithJSON:json];
         }
     }
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    });
 }
 
 
