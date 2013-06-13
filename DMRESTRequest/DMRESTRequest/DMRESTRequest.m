@@ -19,6 +19,7 @@
     BOOL _success;
     long long _contentSize;
     NSUInteger _currentSize;
+    BOOL _isCancelled; 
 }
 
 -(NSMutableURLRequest *)constructRequest;
@@ -53,6 +54,7 @@
         _parameters = parameters;
         _contentSize = 0;
         _currentSize = 0;
+        _isCancelled = NO;
     }
     return self; 
 }
@@ -185,7 +187,8 @@
                                dispatch_async(dispatch_get_main_queue(), ^{
                                    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                                });
-                               if (error.code == -1009) {
+                               if (error.code == -1009 || _isCancelled) {
+                                   _isCancelled  = NO;
                                    completionBlock(res, data, error, NO);
                                }
                                else{
@@ -215,7 +218,8 @@
                                dispatch_async(dispatch_get_main_queue(), ^{
                                    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                                });
-                               if (error.code == -1009) {
+                               if (error.code == -1009 || _isCancelled) {
+                                   _isCancelled = NO;
                                    completionBlock(res, nil, error, NO, NO);
                                }
                                else{
@@ -277,18 +281,14 @@
 -(void)cancelRequest
 {
     [_connection cancel]; 
-    _connection = nil;
-    _responseData = nil;
+    _connection = nil; 
+    _responseData = nil; 
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     });
-    _completionBlock = nil;
-    _errorBlock = nil;
-    _progressBlock = nil;
-    _responseBlock = nil;
-    _fullCompletionBlock = nil;
     _currentSize = 0;
     _contentSize = 0;
+    _isCancelled = YES;
 }
 
 
@@ -342,7 +342,13 @@
         _completionBlock(_responseData);
     }
     if (_fullCompletionBlock) {
-        _fullCompletionBlock(_urlResponse, _responseData, _error, _success);
+        if (_isCancelled) {
+            _isCancelled = NO;
+            _fullCompletionBlock(_urlResponse, _responseData, _error, NO);
+        }
+        else{
+            _fullCompletionBlock(_urlResponse, _responseData, _error, _success);   
+        }
     }
     
     if ([self.delegate respondsToSelector:@selector(requestDidFinishWithData:)]) {
