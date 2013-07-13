@@ -77,10 +77,17 @@
         [request setURL:[self getURL]];
     }
     else {
-        [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.%@",
-                                              self.inUseSettings.baseURL.absoluteString,
-                                              _ressource,
-                                              self.inUseSettings.fileExtension]]];
+        if (self.inUseSettings.fileExtension) {
+            [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@.%@",
+                                                  self.inUseSettings.baseURL.absoluteString,
+                                                  _ressource,
+                                                  self.inUseSettings.fileExtension]]];
+        }
+        else{
+            [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@",
+                                                  self.inUseSettings.baseURL.absoluteString,
+                                                  _ressource]]];
+        }
         [request setHTTPMethod:_method];
         if (![self.inUseSettings isSendJSON]) {
             NSData *data = [[self constructParametersString]dataUsingEncoding:NSUTF8StringEncoding 
@@ -109,13 +116,13 @@
 {
     NSString *fileExt;
     if (self.inUseSettings.fileExtension) {
-        fileExt = self.inUseSettings.fileExtension;
+        fileExt = [NSString stringWithFormat:@".%@", self.inUseSettings.fileExtension];
     }
     else{
         fileExt = @"";
     }
     return [NSURL URLWithString:
-                     [NSString stringWithFormat:@"%@/%@.%@?%@",
+                     [NSString stringWithFormat:@"%@/%@%@?%@",
                       self.inUseSettings.baseURL.absoluteString,
                       _ressource,
                       fileExt,
