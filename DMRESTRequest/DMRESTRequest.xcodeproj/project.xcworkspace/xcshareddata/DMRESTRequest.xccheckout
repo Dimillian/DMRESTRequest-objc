@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>560F5502-F46B-46FD-B015-B0B39A084A94</string>
+	<key>IDESourceControlProjectName</key>
+	<string>DMRESTRequest</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>C1013633-54F0-4B8B-BFCC-2DB3273A2B1F</key>
+		<string>https://github.com/Dimillian/DMRESTRequest-objc.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>DMRESTRequest/DMRESTRequest.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>C1013633-54F0-4B8B-BFCC-2DB3273A2B1F</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/Dimillian/DMRESTRequest-objc.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>C1013633-54F0-4B8B-BFCC-2DB3273A2B1F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C1013633-54F0-4B8B-BFCC-2DB3273A2B1F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>DMRESTRequest-objc</string>
+		</dict>
+	</array>
+</dict>
+</plist>

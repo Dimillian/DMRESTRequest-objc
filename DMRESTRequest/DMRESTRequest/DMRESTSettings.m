@@ -36,7 +36,7 @@ static DMRESTSettings *sharedSettings;
     self = [super init];
     if (self) {
         _permanentHTTPHeaderFields = [[NSMutableDictionary alloc]init];
-        _fileExtension = @"";
+        _fileExtension = nil;
         _sendJSON = NO;
         _escaping = NO;
         _customTimemout = 60;
