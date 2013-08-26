@@ -43,7 +43,7 @@
 
 @implementation DMRESTRequest
 
--(id)initWithMethod:(NSString *)method  
+-(id)initWithMethod:(NSString *)method
           ressource:(NSString *)ressource 
          parameters:(NSDictionary *)parameters
 {
@@ -163,6 +163,7 @@
     if (!_parameters && !self.inUseSettings.permanentParameters) {
          parametersString = @"";
     }
+    
     return parametersString;
 }
 
@@ -230,18 +231,23 @@
                                    completionBlock(res, nil, error, NO, NO);
                                }
                                else{
-                                   NSError *jsonError = nil;
-                                   id jsonObject = [NSJSONSerialization JSONObjectWithData:data
-                                                                                   options:option
-                                                                                     error:&jsonError];
-                                   if (!error && jsonObject) {
-                                       if (useCache) {
-                                           [[DMJSONCache sharedCache]cacheJSONObject:jsonObject forKey:fileName];   
+                                   if (data) {
+                                       NSError *jsonError = nil;
+                                       id jsonObject = [NSJSONSerialization JSONObjectWithData:data
+                                                                                       options:option
+                                                                                         error:&jsonError];
+                                       if (!error && jsonObject) {
+                                           if (useCache) {
+                                               [[DMJSONCache sharedCache]cacheJSONObject:jsonObject forKey:fileName];
+                                           }
+                                           completionBlock(res, jsonObject, nil, YES, NO);
                                        }
-                                       completionBlock(res, jsonObject, nil, YES, NO);
+                                       else{
+                                           completionBlock(res, nil, jsonError, NO, NO);
+                                       }
                                    }
                                    else{
-                                       completionBlock(res, nil, jsonError, NO, NO);
+                                       completionBlock(res, nil, nil, NO, NO);
                                    }
                                }
                                

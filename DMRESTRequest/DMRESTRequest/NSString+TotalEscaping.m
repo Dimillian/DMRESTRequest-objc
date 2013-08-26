@@ -17,7 +17,8 @@
     totalEscapedString = [totalEscapedString stringByReplacingOccurrencesOfString:@"+" withString:@"%2B"]; 
     totalEscapedString = [totalEscapedString stringByReplacingOccurrencesOfString:@"&" withString:@"%26"]; 
     totalEscapedString = [totalEscapedString stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]; 
-    totalEscapedString = [totalEscapedString stringByReplacingOccurrencesOfString:@"/" withString:@"%2F"]; 
+    totalEscapedString = [totalEscapedString stringByReplacingOccurrencesOfString:@"/" withString:@"%2F"];
+    totalEscapedString = [totalEscapedString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
    
     return totalEscapedString; 
 }
