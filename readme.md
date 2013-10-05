@@ -74,6 +74,13 @@ You can add permanent parameters such as a Auth Token with the `DMRESTSettings` 
 `- (void)setPermananentParameterValue:(id)value forParameter:(NSString *)parameter;`
 
 ## Getting started
+
+###Cocoapods
+
+Just add `pod 'DMRESTRequest'` to your podfile 
+
+###Manual
+
 Drag the `DMRESTRequest.xcodeproj` from the Finder to your openned project. 
 
 In the build phase of your target, in the **"target dependencies"** add `DMRESTRequest`, and in the **"Link binary with library"** add `libDMRESTRequest.a`.
