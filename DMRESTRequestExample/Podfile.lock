@@ -1,0 +1,14 @@
+PODS:
+  - DMRESTRequest (1.0)
+
+DEPENDENCIES:
+  - DMRESTRequest (from `https://github.com/Dimillian/DMRESTRequest-objc.git`)
+
+EXTERNAL SOURCES:
+  DMRESTRequest:
+    :git: https://github.com/Dimillian/DMRESTRequest-objc.git
+
+SPEC CHECKSUMS:
+  DMRESTRequest: 919392830b3147562bf395a46fb29cc400ea4e15
+
+COCOAPODS: 0.25.0

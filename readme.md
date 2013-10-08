@@ -79,6 +79,10 @@ You can add permanent parameters such as a Auth Token with the `DMRESTSettings` 
 
 Just add `pod 'DMRESTRequest'` to your podfile 
 
+###Run the example
+
+Run `pod install` in the Example folder
+
 ###Manual
 
 Drag the `DMRESTRequest.xcodeproj` from the Finder to your openned project. 

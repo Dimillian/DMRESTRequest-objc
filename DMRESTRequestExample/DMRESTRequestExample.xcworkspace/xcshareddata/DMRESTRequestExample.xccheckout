@@ -5,20 +5,20 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>6206F7D2-A792-49D4-9159-993528F0C97D</string>
+	<string>9F777CBD-C281-4A69-A8BB-67E3ACE8E07B</string>
 	<key>IDESourceControlProjectName</key>
-	<string>DMRESTRequest</string>
+	<string>DMRESTRequestExample</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>C1013633-54F0-4B8B-BFCC-2DB3273A2B1F</key>
 		<string>https://github.com/Dimillian/DMRESTRequest-objc.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>DMRESTRequest/DMRESTRequest.xcodeproj/project.xcworkspace</string>
+	<string>DMRESTRequestExample/DMRESTRequestExample.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>C1013633-54F0-4B8B-BFCC-2DB3273A2B1F</key>
-		<string>../../..</string>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/Dimillian/DMRESTRequest-objc.git</string>
