@@ -5,19 +5,19 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>9F777CBD-C281-4A69-A8BB-67E3ACE8E07B</string>
+	<string>640EC6CF-73A2-4430-9001-6A4ED1947128</string>
 	<key>IDESourceControlProjectName</key>
 	<string>DMRESTRequestExample</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>C1013633-54F0-4B8B-BFCC-2DB3273A2B1F</key>
+		<key>CB910C2B-9C2F-4AA5-B064-57E74ADC6BED</key>
 		<string>https://github.com/Dimillian/DMRESTRequest-objc.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>DMRESTRequestExample/DMRESTRequestExample.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>C1013633-54F0-4B8B-BFCC-2DB3273A2B1F</key>
+		<key>CB910C2B-9C2F-4AA5-B064-57E74ADC6BED</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
@@ -25,14 +25,14 @@
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>C1013633-54F0-4B8B-BFCC-2DB3273A2B1F</string>
+	<string>CB910C2B-9C2F-4AA5-B064-57E74ADC6BED</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>C1013633-54F0-4B8B-BFCC-2DB3273A2B1F</string>
+			<string>CB910C2B-9C2F-4AA5-B064-57E74ADC6BED</string>
 			<key>IDESourceControlWCCName</key>
 			<string>DMRESTRequest-objc</string>
 		</dict>
