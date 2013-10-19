@@ -1,5 +1,5 @@
 PODS:
-  - DMRESTRequest (1.0)
+  - DMRESTRequest (1.0.1)
 
 DEPENDENCIES:
   - DMRESTRequest (from `../`)
@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  DMRESTRequest: 919392830b3147562bf395a46fb29cc400ea4e15
+  DMRESTRequest: 2cccdd3294d3c236275c0bf2ca850164041e1b44
 
-COCOAPODS: 0.25.0
+COCOAPODS: 0.26.2
