@@ -364,10 +364,16 @@
 				DSTROOT = /tmp/DMRESTRequest.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DMRESTRequest/DMRESTRequest-Prefix.pch";
+				OTHER_CFLAGS = (
+					"-Wextra",
+					"-Wall",
+					"-Wno-unused-parameter",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = include/DMRESTRequest;
 				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = "";
 			};
 			name = Debug;
 		};
@@ -377,10 +383,16 @@
 				DSTROOT = /tmp/DMRESTRequest.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DMRESTRequest/DMRESTRequest-Prefix.pch";
+				OTHER_CFLAGS = (
+					"-Wextra",
+					"-Wall",
+					"-Wno-unused-parameter",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = include/DMRESTRequest;
 				SKIP_INSTALL = YES;
+				WARNING_CFLAGS = "";
 			};
 			name = Release;
 		};

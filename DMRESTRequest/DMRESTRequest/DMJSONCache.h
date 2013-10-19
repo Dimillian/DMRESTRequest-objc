@@ -27,5 +27,5 @@
 //Completly remove in memory cache
 + (void)emptyInMemoryCache;
 //Size for the cache folder
-+ (int)diskCacheSize;
++ (unsigned long long)diskCacheSize;
 @end

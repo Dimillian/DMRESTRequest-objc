@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'DMRESTRequest'
-  s.version      = '1.0'
+  s.version      = '1.0.1'
   s.summary      = 'Super simple objective-c REST request wrapper.'
   s.homepage     = 'https://github.com/Dimillian/DMRESTRequest-objc'
   s.author = {
@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   }
   s.source = {
     :git => 'https://github.com/Dimillian/DMRESTRequest-objc.git',
-    :tag => '1.0'
+    :tag => '1.0.1'
   }
   s.ios.deployment_target = '6.0'
   s.public_header_files = 'DMRESTRequest/DMRESTRequest/*.h'

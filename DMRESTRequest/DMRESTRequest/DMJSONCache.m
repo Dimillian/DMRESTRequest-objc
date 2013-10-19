@@ -18,7 +18,7 @@ static NSString * const kCacheFolderName = @"DMRESTRequestCachedJSON";
 - (NSString *)fullFilePathForFilename:(NSString *)filename;
 - (void)createCacheFolderIfNotExist;
 
-@property (nonatomic, strong) NSMutableDictionary *inMemoryCache;
+@property (nonatomic, strong) NSCache *inMemoryCache;
 @end
 
 @implementation DMJSONCache
@@ -29,7 +29,7 @@ static DMJSONCache *sharedCache;
 {
     self = [super init];
     if (self) {
-        _inMemoryCache = [[NSMutableDictionary alloc]init];
+        _inMemoryCache = [[NSCache alloc]init];
         [[NSNotificationCenter defaultCenter]addObserver:self
                                                 selector:@selector(receivedMemoryWarning)
                                                     name:UIApplicationDidReceiveMemoryWarningNotification
@@ -141,7 +141,7 @@ static DMJSONCache *sharedCache;
     [[[DMJSONCache sharedCache]inMemoryCache]removeAllObjects];
 }
 
-+ (int)diskCacheSize
++ (unsigned long long)diskCacheSize
 {
     NSDictionary *fileAttributes = [[NSFileManager defaultManager]attributesOfItemAtPath:[[DMJSONCache sharedCache]filePath]
                                                                                     error:nil];
