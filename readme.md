@@ -75,7 +75,7 @@ You can add permanent parameters such as a Auth Token with the `DMRESTSettings` 
 
 ## Getting started
 
-###Cocoapods
+###CocoaPods
 
 Just add `pod 'DMRESTRequest'` to your podfile 
 
